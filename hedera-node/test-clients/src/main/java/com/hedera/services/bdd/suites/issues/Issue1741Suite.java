@@ -20,7 +20,7 @@ import static com.hedera.services.bdd.spec.queries.QueryVerbs.getAccountInfo;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.cryptoCreate;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INSUFFICIENT_PAYER_BALANCE;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -41,7 +41,7 @@ public class Issue1741Suite extends HapiSuite {
         return List.of(queryPaymentTxnMustHavePayerBalanceForBothTransferFeeAndNodePayment());
     }
 
-    @HapiTest
+    @HapiTests
     public static HapiSpec queryPaymentTxnMustHavePayerBalanceForBothTransferFeeAndNodePayment() {
         final long BALANCE = 1_000_000L;
 

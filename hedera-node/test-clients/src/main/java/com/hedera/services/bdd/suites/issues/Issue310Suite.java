@@ -24,7 +24,7 @@ import static com.hedera.services.bdd.spec.transactions.TxnVerbs.submitMessageTo
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.newKeyNamed;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.DUPLICATE_TRANSACTION;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.utilops.UtilVerbs;
@@ -51,7 +51,7 @@ public class Issue310Suite extends HapiSuite {
                 duplicatedTxnsDifferentTypesDifferentNodesDetected());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec duplicatedTxnsSameTypeDetected() {
         long initialBalance = 10_000L;
 
@@ -68,7 +68,7 @@ public class Issue310Suite extends HapiSuite {
                 .then(getTxnRecord("txnId1").logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec duplicatedTxnsDifferentTypesDetected() {
         return defaultHapiSpec("duplicatedTxnsDifferentTypesDetected")
                 .given(
@@ -84,7 +84,7 @@ public class Issue310Suite extends HapiSuite {
     }
 
     // This test requires multiple nodes
-    @HapiTest
+    @HapiTests
     private HapiSpec duplicatedTxnsSameTypeDifferentNodesDetected() {
 
         return defaultHapiSpec("duplicatedTxnsSameTypeDifferentNodesDetected")
@@ -100,7 +100,7 @@ public class Issue310Suite extends HapiSuite {
     }
 
     // This test requires multiple nodes
-    @HapiTest
+    @HapiTests
     private HapiSpec duplicatedTxnsDifferentTypesDifferentNodesDetected() {
         return defaultHapiSpec("duplicatedTxnsDifferentTypesDifferentNodesDetected")
                 .given(

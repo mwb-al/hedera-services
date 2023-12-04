@@ -32,7 +32,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.withOpContext;
 
 import com.google.protobuf.ByteString;
 import com.hedera.node.app.service.evm.utils.EthSigsUtils;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -68,7 +68,7 @@ public class ERC1155ContractInteractions extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec erc1155() {
         return defaultHapiSpec("erc1155")
                 .given(

@@ -34,7 +34,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TOKEN_NOT_ASSO
 import static com.hederahashgraph.api.proto.java.TokenType.NON_FUNGIBLE_UNIQUE;
 
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecSetup;
@@ -69,7 +69,7 @@ public class TokenManagementSpecsStateful extends HapiSuite {
         });
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec freezeMgmtFailureCasesWork() {
         var unfreezableToken = "without";
         var freezableToken = "withPlusDefaultTrue";
@@ -109,7 +109,7 @@ public class TokenManagementSpecsStateful extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nftMintingCapIsEnforced() {
         return defaultHapiSpec("NftMintingCapIsEnforced")
                 .given(

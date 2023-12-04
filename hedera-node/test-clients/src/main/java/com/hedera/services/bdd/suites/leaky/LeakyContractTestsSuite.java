@@ -191,7 +191,7 @@ import com.google.protobuf.ByteString;
 import com.hedera.node.app.hapi.utils.contracts.ParsingConstants.FunctionType;
 import com.hedera.node.app.hapi.utils.ethereum.EthTxData;
 import com.hedera.node.app.hapi.utils.fee.FeeBuilder;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiPropertySource;
 import com.hedera.services.bdd.spec.HapiSpec;
@@ -299,7 +299,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                 shouldReturnNullWhenContractsNoncesExternalizationFlagIsDisabled());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferErc20TokenFromErc721TokenFails() {
         return propertyPreservingHapiSpec("transferErc20TokenFromErc721TokenFails")
                 .preserving(HEDERA_ALLOWANCES_IS_ENABLED)
@@ -340,7 +340,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                 .then(getTxnRecord(TRANSFER_TXN).andAllChildRecords().logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferErc20TokenFromContractWithApproval() {
         final var transferFromOtherContractWithSignaturesTxn = "transferFromOtherContractWithSignaturesTxn";
         final var nestedContract = "NestedERC20Contract";
@@ -467,7 +467,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         getAccountBalance(nestedContract).hasTokenBalance(FUNGIBLE_TOKEN, 10));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferDontWorkWithoutTopLevelSignatures() {
         final var transferTokenTxn = "transferTokenTxn";
         final var transferTokensTxn = "transferTokensTxn";
@@ -1200,7 +1200,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                 .then(overriding(CRYPTO_CREATE_WITH_ALIAS_ENABLED, "true"));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferToCaller() {
         final var transferTxn = TRANSFER_TXN;
         final var sender = "sender";
@@ -1242,7 +1242,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                                 .has(contractWith().balance(10_000L - 10L))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec maxRefundIsMaxGasRefundConfiguredWhenTXGasPriceIsSmaller() {
         return defaultHapiSpec("MaxRefundIsMaxGasRefundConfiguredWhenTXGasPriceIsSmaller")
                 .given(
@@ -1308,7 +1308,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                 .then(overriding(LEDGER_AUTO_RENEW_PERIOD_MAX_DURATION, DEFAULT_MAX_AUTO_RENEW_PERIOD));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec gasLimitOverMaxGasLimitFailsPrecheck() {
         return defaultHapiSpec("GasLimitOverMaxGasLimitFailsPrecheck")
                 .given(
@@ -1323,7 +1323,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         resetToDefault(CONTRACTS_MAX_GAS_PER_SEC));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec createGasLimitOverMaxGasLimitFailsPrecheck() {
         return defaultHapiSpec("CreateGasLimitOverMaxGasLimitFailsPrecheck")
                 .given(overriding("contracts.maxGasPerSec", "100"), uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT))
@@ -1333,7 +1333,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         UtilVerbs.resetToDefault("contracts.maxGasPerSec"));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferZeroHbarsToCaller() {
         final var transferTxn = TRANSFER_TXN;
         return defaultHapiSpec("transferZeroHbarsToCaller")
@@ -1376,7 +1376,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                 }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec resultSizeAffectsFees() {
         final var contract = "VerboseDeposit";
         final var TRANSFER_AMOUNT = 1_000L;
@@ -1464,7 +1464,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         overriding("tokens.maxPerAccount", "" + ADVENTUROUS_NETWORK));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec createMaxRefundIsMaxGasRefundConfiguredWhenTXGasPriceIsSmaller() {
         return defaultHapiSpec("CreateMaxRefundIsMaxGasRefundConfiguredWhenTXGasPriceIsSmaller")
                 .given(
@@ -1485,7 +1485,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         resetToDefault(CONTRACTS_MAX_REFUND_PERCENT_OF_GAS_LIMIT1));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec createMinChargeIsTXGasUsedByContractCreate() {
         return defaultHapiSpec("CreateMinChargeIsTXGasUsedByContractCreate")
                 .given(
@@ -1584,7 +1584,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                                 .has(contractWith().propertiesInheritedFrom(contract))));
     }
 
-    @HapiTest
+    @HapiTests
     HapiSpec temporarySStoreRefundTest() {
         final var contract = "TemporarySStoreRefund";
         return defaultHapiSpec("TemporarySStoreRefundTest")
@@ -1623,7 +1623,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         UtilVerbs.resetToDefault(CONTRACTS_MAX_REFUND_PERCENT_OF_GAS_LIMIT1));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec deletedContractsCannotBeUpdated() {
         final var contract = "SelfDestructCallable";
         final var beneficiary = "beneficiary";
@@ -1636,7 +1636,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                 .then(contractUpdate(contract).newMemo("Hi there!").hasKnownStatus(INVALID_CONTRACT_ID));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec canCallPendingContractSafely() {
         final var numSlots = 64L;
         final var createBurstSize = 500;
@@ -1670,7 +1670,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         .via(callTxn)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec lazyCreateThroughPrecompileNotSupportedWhenFlagDisabled() {
         final var CONTRACT = CRYPTO_TRANSFER;
         final var SENDER = "sender";
@@ -1974,7 +1974,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         resetToDefault(lazyCreationProperty, contractsEvmVersionProperty, maxPrecedingRecords));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec rejectsCreationAndUpdateOfAssociationsWhenFlagDisabled() {
         return propertyPreservingHapiSpec("rejectsCreationAndUpdateOfAssociationsWhenFlagDisabled")
                 .preserving(CONTRACT_ALLOW_ASSOCIATIONS_PROPERTY)
@@ -1991,7 +1991,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         contractUpdate(EMPTY_CONSTRUCTOR_CONTRACT).newMemo("Hola!"));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec erc20TransferFromDoesNotWorkIfFlagIsDisabled() {
         return defaultHapiSpec("erc20TransferFromDoesNotWorkIfFlagIsDisabled")
                 .given(
@@ -2036,7 +2036,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                         overriding(HEDERA_ALLOWANCES_IS_ENABLED, "true"));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec whitelistPositiveCase() {
         final AtomicLong whitelistedCalleeMirrorNum = new AtomicLong();
         final AtomicReference<TokenID> tokenID = new AtomicReference<>();
@@ -2087,7 +2087,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                                 .has(accountDetailsWith().tokenAllowancesCount(0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec whitelistNegativeCases() {
         final AtomicLong unlistedCalleeMirrorNum = new AtomicLong();
         final AtomicLong whitelistedCalleeMirrorNum = new AtomicLong();
@@ -2208,7 +2208,7 @@ public class LeakyContractTestsSuite extends HapiSuite {
                 }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec contractCreateFollowedByContractCallNoncesExternalization() {
         final var contract = "NoncesExternalization";
         final var payer = "payer";

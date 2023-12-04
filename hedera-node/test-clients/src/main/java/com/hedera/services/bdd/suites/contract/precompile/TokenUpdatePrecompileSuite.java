@@ -49,7 +49,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TOKEN_IS_IMMUT
 import static com.hederahashgraph.api.proto.java.TokenType.FUNGIBLE_COMMON;
 
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.assertions.TransactionRecordAsserts;
@@ -120,7 +120,7 @@ public class TokenUpdatePrecompileSuite extends HapiSuite {
                 getTokenKeyForNonFungibleNegative());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateTokenWithInvalidKeyValues() {
         final AtomicReference<TokenID> vanillaTokenID = new AtomicReference<>();
         return defaultHapiSpec("updateTokenWithInvalidKeyValues")
@@ -168,7 +168,7 @@ public class TokenUpdatePrecompileSuite extends HapiSuite {
                 .then(sourcing(() -> emptyChildRecordsCheck(UPDATE_TXN, CONTRACT_REVERT_EXECUTED)));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec updateNftTokenKeysWithWrongTokenIdAndMissingAdminKey() {
         final AtomicReference<TokenID> nftToken = new AtomicReference<>();
         return defaultHapiSpec("updateNftTokenKeysWithWrongTokenIdAndMissingAdminKey")
@@ -247,7 +247,7 @@ public class TokenUpdatePrecompileSuite extends HapiSuite {
                                 TransactionRecordAsserts.recordWith().status(TOKEN_IS_IMMUTABLE)))));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec getTokenKeyForNonFungibleNegative() {
         final AtomicReference<TokenID> nftToken = new AtomicReference<>();
         return defaultHapiSpec("getTokenKeyForNonFungibleNegative")

@@ -51,7 +51,7 @@ import static com.hederahashgraph.api.proto.java.TokenType.FUNGIBLE_COMMON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.esaulpaugh.headlong.abi.Address;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiPropertySource;
 import com.hedera.services.bdd.spec.HapiSpec;
@@ -60,8 +60,10 @@ import com.hedera.services.bdd.spec.transactions.contract.HapiParserUtil;
 import com.hedera.services.bdd.suites.HapiSuite;
 import com.hederahashgraph.api.proto.java.AccountID;
 import com.hederahashgraph.api.proto.java.TokenID;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Tag;
@@ -116,15 +118,15 @@ public class AssociatePrecompileSuite extends HapiSuite {
     }
 
     /* -- HSCS-PREC-27 from HTS Precompile Test Plan -- */
-    @HapiTest
+    @HapiTests
     private HapiSpec functionCallWithLessThanFourBytesFailsWithinSingleContractCall() {
         return defaultHapiSpec("functionCallWithLessThanFourBytesFailsWithinSingleContractCall")
                 .given(uploadInitCode(THE_GRACEFULLY_FAILING_CONTRACT), contractCreate(THE_GRACEFULLY_FAILING_CONTRACT))
                 .when(contractCall(
-                                THE_GRACEFULLY_FAILING_CONTRACT,
-                                "performLessThanFourBytesFunctionCall",
-                                HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS),
-                                HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS))
+                        THE_GRACEFULLY_FAILING_CONTRACT,
+                        "performLessThanFourBytesFunctionCall",
+                        HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS),
+                        HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS))
                         .notTryingAsHexedliteral()
                         .via("Function call with less than 4 bytes txn")
                         .gas(100_000))
@@ -132,40 +134,40 @@ public class AssociatePrecompileSuite extends HapiSuite {
     }
 
     /* -- HSCS-PREC-27 from HTS Precompile Test Plan -- */
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidAbiCallGracefullyFailsWithinSingleContractCall() {
         return defaultHapiSpec("invalidAbiCallGracefullyFailsWithinSingleContractCall")
                 .given(uploadInitCode(THE_GRACEFULLY_FAILING_CONTRACT), contractCreate(THE_GRACEFULLY_FAILING_CONTRACT))
                 .when(contractCall(
-                                THE_GRACEFULLY_FAILING_CONTRACT,
-                                "performInvalidlyFormattedFunctionCall",
-                                HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS),
-                                new Address[] {
-                                    HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS),
-                                    HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS)
-                                })
+                        THE_GRACEFULLY_FAILING_CONTRACT,
+                        "performInvalidlyFormattedFunctionCall",
+                        HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS),
+                        new Address[]{
+                                HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS),
+                                HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS)
+                        })
                         .notTryingAsHexedliteral()
                         .via("Invalid Abi Function call txn"))
                 .then(childRecordsCheck("Invalid Abi Function call txn", SUCCESS));
     }
 
     /* -- HSCS-PREC-26 from HTS Precompile Test Plan -- */
-    @HapiTest
+    @HapiTests
     private HapiSpec nonSupportedAbiCallGracefullyFailsWithinSingleContractCall() {
         return defaultHapiSpec("nonSupportedAbiCallGracefullyFailsWithinSingleContractCall")
                 .given(uploadInitCode(THE_GRACEFULLY_FAILING_CONTRACT), contractCreate(THE_GRACEFULLY_FAILING_CONTRACT))
                 .when(contractCall(
-                                THE_GRACEFULLY_FAILING_CONTRACT,
-                                "performNonExistingServiceFunctionCall",
-                                HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS),
-                                HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS))
+                        THE_GRACEFULLY_FAILING_CONTRACT,
+                        "performNonExistingServiceFunctionCall",
+                        HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS),
+                        HapiParserUtil.asHeadlongAddress(TOKEN_ADDRESS))
                         .notTryingAsHexedliteral()
                         .via("nonExistingFunctionCallTxn"))
                 .then(childRecordsCheck("nonExistingFunctionCallTxn", SUCCESS));
     }
 
     /* -- HSCS-PREC-26 from HTS Precompile Test Plan -- */
-    @HapiTest
+    @HapiTests
     private HapiSpec nonSupportedAbiCallGracefullyFailsWithMultipleContractCalls() {
         final AtomicReference<AccountID> accountID = new AtomicReference<>();
         final AtomicReference<TokenID> vanillaTokenID = new AtomicReference<>();
@@ -185,18 +187,18 @@ public class AssociatePrecompileSuite extends HapiSuite {
                         newKeyNamed(DELEGATE_KEY).shape(DELEGATE_CONTRACT_KEY_SHAPE.signedWith(sigs(ON, THE_CONTRACT))),
                         cryptoUpdate(ACCOUNT).key(DELEGATE_KEY),
                         contractCall(
-                                        THE_CONTRACT,
-                                        "nonSupportedFunction",
-                                        HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
-                                        HapiParserUtil.asHeadlongAddress(asAddress(vanillaTokenID.get())))
+                                THE_CONTRACT,
+                                "nonSupportedFunction",
+                                HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
+                                HapiParserUtil.asHeadlongAddress(asAddress(vanillaTokenID.get())))
                                 .payingWith(GENESIS)
                                 .via("notSupportedFunctionCallTxn")
                                 .hasKnownStatus(CONTRACT_REVERT_EXECUTED),
                         contractCall(
-                                        THE_CONTRACT,
-                                        TOKEN_ASSOCIATE_FUNCTION,
-                                        HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
-                                        HapiParserUtil.asHeadlongAddress(asAddress(vanillaTokenID.get())))
+                                THE_CONTRACT,
+                                TOKEN_ASSOCIATE_FUNCTION,
+                                HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
+                                HapiParserUtil.asHeadlongAddress(asAddress(vanillaTokenID.get())))
                                 .payingWith(GENESIS)
                                 .via(VANILLA_TOKEN_ASSOCIATE_TXN)
                                 .gas(GAS_TO_OFFER))))
@@ -214,7 +216,7 @@ public class AssociatePrecompileSuite extends HapiSuite {
     }
 
     /* -- HSCS-PREC-27 from HTS Precompile Test Plan -- */
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidlyFormattedAbiCallGracefullyFailsWithMultipleContractCalls() {
         final AtomicReference<AccountID> accountID = new AtomicReference<>();
         final AtomicReference<TokenID> vanillaTokenID = new AtomicReference<>();
@@ -235,19 +237,19 @@ public class AssociatePrecompileSuite extends HapiSuite {
                         newKeyNamed(DELEGATE_KEY).shape(DELEGATE_CONTRACT_KEY_SHAPE.signedWith(sigs(ON, THE_CONTRACT))),
                         cryptoUpdate(ACCOUNT).key(DELEGATE_KEY),
                         contractCall(
-                                        THE_CONTRACT,
-                                        TOKEN_ASSOCIATE_FUNCTION,
-                                        HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
-                                        HapiParserUtil.asHeadlongAddress(invalidAbiArgument))
+                                THE_CONTRACT,
+                                TOKEN_ASSOCIATE_FUNCTION,
+                                HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
+                                HapiParserUtil.asHeadlongAddress(invalidAbiArgument))
                                 .payingWith(GENESIS)
                                 .via("functionCallWithInvalidArgumentTxn")
                                 .gas(GAS_TO_OFFER)
                                 .hasKnownStatus(CONTRACT_REVERT_EXECUTED),
                         contractCall(
-                                        THE_CONTRACT,
-                                        TOKEN_ASSOCIATE_FUNCTION,
-                                        HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
-                                        HapiParserUtil.asHeadlongAddress(asAddress(vanillaTokenID.get())))
+                                THE_CONTRACT,
+                                TOKEN_ASSOCIATE_FUNCTION,
+                                HapiParserUtil.asHeadlongAddress(asAddress(accountID.get())),
+                                HapiParserUtil.asHeadlongAddress(asAddress(vanillaTokenID.get())))
                                 .payingWith(GENESIS)
                                 .via(VANILLA_TOKEN_ASSOCIATE_TXN)
                                 .gas(GAS_TO_OFFER)
@@ -272,7 +274,7 @@ public class AssociatePrecompileSuite extends HapiSuite {
                         getAccountInfo(ACCOUNT).hasToken(relationshipWith(VANILLA_TOKEN)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec associateWithMissingEvmAddressHasSaneTxnAndRecord() {
         final AtomicReference<Address> tokenAddress = new AtomicReference<>();
         final var missingAddress =
@@ -298,15 +300,15 @@ public class AssociatePrecompileSuite extends HapiSuite {
     }
 
     /* -- HSCS-PREC-27 from HTS Precompile Test Plan -- */
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidSingleAbiCallConsumesAllProvidedGas() {
         return defaultHapiSpec("invalidSingleAbiCallConsumesAllProvidedGas")
                 .given(uploadInitCode(THE_GRACEFULLY_FAILING_CONTRACT), contractCreate(THE_GRACEFULLY_FAILING_CONTRACT))
                 .when(
                         contractCall(
-                                        THE_GRACEFULLY_FAILING_CONTRACT,
-                                        "performInvalidlyFormattedSingleFunctionCall",
-                                        HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS))
+                                THE_GRACEFULLY_FAILING_CONTRACT,
+                                "performInvalidlyFormattedSingleFunctionCall",
+                                HapiParserUtil.asHeadlongAddress(ACCOUNT_ADDRESS))
                                 .notTryingAsHexedliteral()
                                 .via(INVALID_SINGLE_ABI_CALL_TXN)
                                 .hasKnownStatus(CONTRACT_REVERT_EXECUTED),

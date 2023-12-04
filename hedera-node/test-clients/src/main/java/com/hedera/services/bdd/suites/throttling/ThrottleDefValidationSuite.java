@@ -28,7 +28,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OPERATION_REPE
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS_BUT_MISSING_EXPECTED_OPERATION;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.THROTTLE_GROUP_HAS_ZERO_OPS_PER_SEC;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecSetup;
@@ -65,7 +65,7 @@ public class ThrottleDefValidationSuite extends HapiSuite {
         });
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateWithMissingTokenMintFails() {
         var missingMintThrottles = protoDefsFromResource("testSystemFiles/throttles-sans-mint.json");
 
@@ -78,7 +78,7 @@ public class ThrottleDefValidationSuite extends HapiSuite {
                         .hasKnownStatusFrom(INVALID_TRANSACTION, SUCCESS_BUT_MISSING_EXPECTED_OPERATION));
     }
 
-    @HapiTest
+    @HapiTests
     @Order(100) // this needs to be executed after all other tests
     private HapiSpec ensureDefaultsRestored() {
         var defaultThrottles = protoDefsFromResource("testSystemFiles/throttles-dev.json");
@@ -96,7 +96,7 @@ public class ThrottleDefValidationSuite extends HapiSuite {
                                         Map.of("fees.percentCongestionMultipliers", DEFAULT_CONGESTION_MULTIPLIERS)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec throttleUpdateWithZeroGroupOpsPerSecFails() {
         var zeroOpsPerSecThrottles = protoDefsFromResource("testSystemFiles/zero-ops-group.json");
 
@@ -109,7 +109,7 @@ public class ThrottleDefValidationSuite extends HapiSuite {
                         .hasKnownStatus(THROTTLE_GROUP_HAS_ZERO_OPS_PER_SEC));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec throttleUpdateRejectsMultiGroupAssignment() {
         var multiGroupThrottles = protoDefsFromResource("testSystemFiles/duplicated-operation.json");
 
@@ -122,7 +122,7 @@ public class ThrottleDefValidationSuite extends HapiSuite {
                         .hasKnownStatus(OPERATION_REPEATED_IN_BUCKET_GROUPS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec throttleDefsRejectUnauthorizedPayers() {
         return defaultHapiSpec("ThrottleDefsRejectUnauthorizedPayers")
                 .given(

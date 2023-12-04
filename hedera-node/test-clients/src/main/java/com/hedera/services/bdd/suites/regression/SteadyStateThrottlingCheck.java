@@ -42,7 +42,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.base.Stopwatch;
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -128,7 +128,7 @@ public class SteadyStateThrottlingCheck extends HapiSuite {
                 restoreDevLimits());
     }
 
-    @HapiTest
+    @HapiTests
     @Order(1)
     private HapiSpec setArtificialLimits() {
         var artificialLimits = protoDefsFromResource("testSystemFiles/artificial-limits.json");
@@ -141,13 +141,13 @@ public class SteadyStateThrottlingCheck extends HapiSuite {
                         .contents(artificialLimits.toByteArray()));
     }
 
-    @HapiTest
+    @HapiTests
     @Order(2)
     private HapiSpec checkXfersTps() {
         return checkTps("Xfers", EXPECTED_XFER_TPS, xferOps());
     }
 
-    @HapiTest
+    @HapiTests
     @Order(3)
     private HapiSpec checkFungibleMintsTps() {
         return checkTps("FungibleMints", EXPECTED_FUNGIBLE_MINT_TPS, fungibleMintOps());
@@ -171,7 +171,7 @@ public class SteadyStateThrottlingCheck extends HapiSuite {
         return checkBalanceQps(1000, EXPECTED_GET_BALANCE_QPS);
     }
 
-    @HapiTest
+    @HapiTests
     @Order(7)
     private HapiSpec restoreDevLimits() {
         var defaultThrottles = protoDefsFromResource("testSystemFiles/throttles-dev.json");

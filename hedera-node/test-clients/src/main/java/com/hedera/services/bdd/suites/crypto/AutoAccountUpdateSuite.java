@@ -33,7 +33,7 @@ import static com.hedera.services.bdd.spec.utilops.records.SnapshotMatchMode.NON
 import static com.hedera.services.bdd.suites.crypto.AutoCreateUtils.updateSpecFor;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_SIGNATURE;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.keys.KeyShape;
@@ -81,7 +81,7 @@ public class AutoAccountUpdateSuite extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec modifySigRequiredAfterAutoAccountCreation() {
         return defaultHapiSpec("modifySigRequiredAfterAutoAccountCreation")
                 .given(newKeyNamed(ALIAS), cryptoCreate(PAYER).balance(INITIAL_BALANCE * ONE_HBAR))
@@ -124,7 +124,7 @@ public class AutoAccountUpdateSuite extends HapiSuite {
                                 .has(accountWith().expectedBalanceWithChargedUsd((2 * ONE_HUNDRED_HBARS), 0, 0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateKeyOnAutoCreatedAccount() {
         final var complexKey = "complexKey";
 

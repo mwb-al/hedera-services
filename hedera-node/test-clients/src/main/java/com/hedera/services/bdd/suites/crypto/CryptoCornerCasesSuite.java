@@ -27,7 +27,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_TRANSA
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.MEMO_TOO_LONG;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.PAYER_ACCOUNT_NOT_FOUND;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecSetup;
@@ -70,7 +70,7 @@ public class CryptoCornerCasesSuite extends HapiSuite {
                 .build();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidTransactionBody() {
         return defaultHapiSpec("InvalidTransactionBody")
                 .given()
@@ -92,7 +92,7 @@ public class CryptoCornerCasesSuite extends HapiSuite {
         return TxnUtils.replaceTxnNodeAccount(txn, badNodeAccount);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidNodeAccount() {
         return defaultHapiSpec("InvalidNodeAccount")
                 .given()
@@ -107,7 +107,7 @@ public class CryptoCornerCasesSuite extends HapiSuite {
         return TxnUtils.replaceTxnDuration(txn, -1L);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidTransactionDuration() {
         return defaultHapiSpec("InvalidTransactionDuration")
                 .given()
@@ -123,7 +123,7 @@ public class CryptoCornerCasesSuite extends HapiSuite {
         return TxnUtils.replaceTxnMemo(txn, newMemo);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidTransactionMemoTooLong() {
         return defaultHapiSpec("InvalidTransactionMemoTooLong")
                 .given()
@@ -143,7 +143,7 @@ public class CryptoCornerCasesSuite extends HapiSuite {
         return TxnUtils.replaceTxnPayerAccount(txn, badPayerAccount);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidTransactionPayerAccountNotFound() {
         return defaultHapiSpec("InvalidTransactionDuration")
                 .given()
@@ -159,7 +159,7 @@ public class CryptoCornerCasesSuite extends HapiSuite {
         return TxnUtils.replaceTxnStartTime(txn, newStartTimeSecs, 0);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidTransactionStartTime() {
         return defaultHapiSpec("InvalidTransactionStartTime")
                 .given()

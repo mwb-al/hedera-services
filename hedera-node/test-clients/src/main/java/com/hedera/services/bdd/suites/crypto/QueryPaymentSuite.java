@@ -27,7 +27,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INSUFFICIENT_T
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_RECEIVING_NODE_ACCOUNT;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OK;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -73,7 +73,7 @@ public class QueryPaymentSuite extends HapiSuite {
      * 2. TransactionPayer will pay for query payment to node and payer has less balance
      * 3. Transaction payer is not involved in transfers for query payment to node and one or more have less balance
      */
-    @HapiTest
+    @HapiTests
     private HapiSpec queryPaymentsFailsWithInsufficientFunds() {
         return defaultHapiSpec("queryPaymentsFailsWithInsufficientFunds")
                 .given(
@@ -109,7 +109,7 @@ public class QueryPaymentSuite extends HapiSuite {
      * 2. TransactionPayer will pay for query payment to node and payer has enough balance
      * 3. Transaction payer is not involved in transfers for query payment to node and all payers have enough balance
      */
-    @HapiTest
+    @HapiTests
     private HapiSpec queryPaymentsMultiBeneficiarySucceeds() {
         return defaultHapiSpec("queryPaymentsMultiBeneficiarySucceeds")
                 .given(
@@ -139,7 +139,7 @@ public class QueryPaymentSuite extends HapiSuite {
     }
 
     // Check if multiple payers or single payer pay amount to node
-    @HapiTest
+    @HapiTests
     private HapiSpec queryPaymentsSingleBeneficiaryChecked() {
         return defaultHapiSpec("queryPaymentsSingleBeneficiaryChecked")
                 .given(
@@ -161,7 +161,7 @@ public class QueryPaymentSuite extends HapiSuite {
     }
 
     // Check if payment is not done to node
-    @HapiTest
+    @HapiTests
     private HapiSpec queryPaymentsNotToNodeFails() {
         return defaultHapiSpec("queryPaymentsNotToNodeFails")
                 .given(

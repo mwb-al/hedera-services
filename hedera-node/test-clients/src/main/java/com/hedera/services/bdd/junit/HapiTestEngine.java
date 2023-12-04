@@ -68,7 +68,7 @@ import org.junit.platform.engine.support.hierarchical.Node;
  *
  * <p>This implementation automatically locates all test classes annotated with {@link HapiTestSuite}. Within those
  * classes, any methods that take no args and return a {@link HapiSpec} will be picked up as test methods, but will be
- * skipped. Any of those methods that are also annotated with {@link HapiTest} will be executed. Such methods also
+ * skipped. Any of those methods that are also annotated with {@link HapiTests} will be executed. Such methods also
  * support the JUnit Jupiter {@link Disabled} annotation.
  */
 public class HapiTestEngine extends HierarchicalTestEngine<HapiTestEngineExecutionContext> /* implements TestEngine */ {
@@ -84,11 +84,11 @@ public class HapiTestEngine extends HierarchicalTestEngine<HapiTestEngineExecuti
             classCandidate -> isAnnotated(classCandidate, HapiTestSuite.class);
 
     /**
-     * Tests whether a method is annotated with {@link HapiTest}, or whether it is a no-arg method that returns a
+     * Tests whether a method is annotated with {@link HapiTests}, or whether it is a no-arg method that returns a
      * {@link HapiSpec}. Any of the former type of method will be executed, while any of the latter will be skipped.
      */
     private static final Predicate<Method> IS_HAPI_TEST =
-            methodCandidate -> isAnnotated(methodCandidate, HapiTest.class)
+            methodCandidate -> isAnnotated(methodCandidate, HapiTests.class)
                     || (methodCandidate.getParameterCount() == 0 && methodCandidate.getReturnType() == HapiSpec.class);
 
     private static final Comparator<Method> noSorting = (m1, m2) -> 0;
@@ -110,7 +110,7 @@ public class HapiTestEngine extends HierarchicalTestEngine<HapiTestEngineExecuti
      *
      * <p>This method is responsible for discovering the classes and methods that form our tests. It constructs a tree
      * of {@link TestDescriptor}s, one for each class annotated with {@link HapiTestSuite}, where each such
-     * {@link ClassTestDescriptor} has a child for each spec method (whether, or not annotated with {@link HapiTest}).
+     * {@link ClassTestDescriptor} has a child for each spec method (whether, or not annotated with {@link HapiTests}).
      */
     @Override
     public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
@@ -353,7 +353,7 @@ public class HapiTestEngine extends HierarchicalTestEngine<HapiTestEngineExecuti
 
         @Override
         public SkipResult shouldBeSkipped(HapiTestEngineExecutionContext context) {
-            final var isHapiTestAnnotated = isAnnotated(testMethod, HapiTest.class);
+            final var isHapiTestAnnotated = isAnnotated(testMethod, HapiTests.class);
             final var disabledAnnotation = findAnnotation(testMethod, Disabled.class);
 
             if (!isHapiTestAnnotated) {

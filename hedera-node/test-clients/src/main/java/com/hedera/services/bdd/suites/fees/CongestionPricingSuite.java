@@ -28,7 +28,7 @@ import static com.hedera.services.bdd.spec.transactions.TxnVerbs.uploadInitCode;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.*;
 import static com.hedera.services.bdd.suites.utils.sysfiles.serdes.ThrottleDefsLoader.protoDefsFromResource;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -68,7 +68,7 @@ public class CongestionPricingSuite extends HapiSuite {
         return List.of(new HapiSpec[] {canUpdateMultipliersDynamically(), canUpdateMultipliersDynamically2()});
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec canUpdateMultipliersDynamically() {
         var artificialLimits = protoDefsFromResource("testSystemFiles/artificial-limits-congestion.json");
         var defaultThrottles = protoDefsFromResource("testSystemFiles/throttles-dev.json");
@@ -156,7 +156,7 @@ public class CongestionPricingSuite extends HapiSuite {
                                 "~7x multiplier should be in affect!")));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec canUpdateMultipliersDynamically2() {
         var artificialLimits = protoDefsFromResource("testSystemFiles/artificial-limits-congestion.json");
         var defaultThrottles = protoDefsFromResource("testSystemFiles/throttles-dev.json");

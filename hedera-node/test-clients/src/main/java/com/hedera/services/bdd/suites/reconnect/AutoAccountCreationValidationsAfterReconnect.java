@@ -21,7 +21,7 @@ import static com.hedera.services.bdd.spec.queries.QueryVerbs.getAccountInfo;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.inParallel;
 import static com.hedera.services.bdd.suites.reconnect.AutoAccountCreationsBeforeReconnect.TOTAL_ACCOUNTS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.assertions.AccountInfoAsserts;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -47,7 +47,7 @@ public class AutoAccountCreationValidationsAfterReconnect extends HapiSuite {
     }
     /* These validations are assuming the state is from a 6N-1C test in which a client generates 10 autoAccounts in the
      * beginning of the test */
-    @HapiTest
+    @HapiTests
     private HapiSpec getAccountInfoOfAutomaticallyCreatedAccounts() {
         return defaultHapiSpec("GetAccountInfoOfAutomaticallyCreatedAccounts")
                 .given()

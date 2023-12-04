@@ -40,7 +40,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_TOKEN_
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TOKEN_IS_IMMUTABLE;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TOKEN_WAS_DELETED;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -80,7 +80,7 @@ public class TokenDeleteSpecs extends HapiSuite {
                 deletionValidatesRef());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec treasuryBecomesDeletableAfterTokenDelete() {
         return defaultHapiSpec("TreasuryBecomesDeletableAfterTokenDelete")
                 .given(
@@ -98,7 +98,7 @@ public class TokenDeleteSpecs extends HapiSuite {
                 .then(tokenDissociate(TOKEN_TREASURY, SECOND_TBD), cryptoDelete(TOKEN_TREASURY));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec deletionValidatesAlreadyDeletedToken() {
         return defaultHapiSpec("DeletionValidatesAlreadyDeletedToken")
                 .given(
@@ -110,7 +110,7 @@ public class TokenDeleteSpecs extends HapiSuite {
                 .then(tokenDelete("tbd").hasKnownStatus(TOKEN_WAS_DELETED));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec deletionValidatesMissingAdminKey() {
         return defaultHapiSpec("DeletionValidatesMissingAdminKey")
                 .given(
@@ -125,7 +125,7 @@ public class TokenDeleteSpecs extends HapiSuite {
                 .then(tokenDelete("tbd").payingWith(PAYER).signedBy(PAYER).hasKnownStatus(TOKEN_IS_IMMUTABLE));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec deletionWorksAsExpected() {
         return defaultHapiSpec("DeletionWorksAsExpected")
                 .given(
@@ -165,7 +165,7 @@ public class TokenDeleteSpecs extends HapiSuite {
                         tokenUnfreeze("tbd", GENESIS).hasKnownStatus(TOKEN_WAS_DELETED));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec deletionValidatesRef() {
         return defaultHapiSpec("DeletionValidatesRef")
                 .given(cryptoCreate(PAYER))

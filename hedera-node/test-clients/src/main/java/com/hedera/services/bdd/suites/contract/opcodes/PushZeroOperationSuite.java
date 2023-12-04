@@ -29,7 +29,7 @@ import static com.hedera.services.bdd.spec.transactions.TxnVerbs.uploadInitCode;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.overriding;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.sourcing;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -74,7 +74,7 @@ public class PushZeroOperationSuite extends HapiSuite {
         return List.of(pushZeroHappyPathWorks(), pushZeroDisabledInV034());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec pushZeroHappyPathWorks() {
         final var pushZeroContract = CONTRACT;
         final var pushResult = "pushResult";
@@ -100,7 +100,7 @@ public class PushZeroOperationSuite extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec pushZeroDisabledInV034() {
         final var pushZeroContract = CONTRACT;
         final var pushResult = "pushResult";

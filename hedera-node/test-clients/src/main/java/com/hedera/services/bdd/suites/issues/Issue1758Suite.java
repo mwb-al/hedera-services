@@ -23,7 +23,7 @@ import static com.hedera.services.bdd.spec.transactions.TxnVerbs.cryptoTransfer;
 import static com.hedera.services.bdd.spec.transactions.crypto.HapiCryptoTransfer.tinyBarsFromTo;
 import static com.hedera.services.bdd.spec.utilops.CustomSpecAssert.allRunFor;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.queries.meta.HapiGetTxnRecord;
@@ -47,7 +47,7 @@ public class Issue1758Suite extends HapiSuite {
         return List.of(allowsCryptoCreatePayerToHaveLessThanTwiceFee());
     }
 
-    @HapiTest
+    @HapiTests
     public static HapiSpec allowsCryptoCreatePayerToHaveLessThanTwiceFee() {
         return defaultFailingHapiSpec("AllowsCryptoCreatePayerToHaveLessThanTwiceFee")
                 .given(

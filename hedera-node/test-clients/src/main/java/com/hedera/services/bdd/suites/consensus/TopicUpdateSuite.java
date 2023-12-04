@@ -36,7 +36,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OK;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.UNAUTHORIZED;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecSetup;
@@ -85,7 +85,7 @@ public class TopicUpdateSuite extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateToMissingTopicFails() {
         return defaultHapiSpec("updateToMissingTopicFails")
                 .given()
@@ -93,7 +93,7 @@ public class TopicUpdateSuite extends HapiSuite {
                 .then(updateTopic("1.2.3").hasKnownStatus(INVALID_TOPIC_ID));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec validateMultipleFields() {
         byte[] longBytes = new byte[1000];
         Arrays.fill(longBytes, (byte) 33);
@@ -115,7 +115,7 @@ public class TopicUpdateSuite extends HapiSuite {
                                 .hasKnownStatus(AUTORENEW_DURATION_NOT_IN_RANGE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec topicUpdateSigReqsEnforcedAtConsensus() {
         long PAYER_BALANCE = 199_999_999_999L;
         Function<String[], HapiTopicUpdate> updateTopicSignedBy = (signers) -> updateTopic("testTopic")
@@ -154,7 +154,7 @@ public class TopicUpdateSuite extends HapiSuite {
                         .hasAutoRenewAccount("newAutoRenewAccount"));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateSubmitKeyToDiffKey() {
         return defaultHapiSpec("updateSubmitKeyToDiffKey")
                 .given(
@@ -168,7 +168,7 @@ public class TopicUpdateSuite extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateAdminKeyToDiffKey() {
         return defaultHapiSpec("updateAdminKeyToDiffKey")
                 .given(
@@ -179,7 +179,7 @@ public class TopicUpdateSuite extends HapiSuite {
                 .then(getTopicInfo("testTopic").hasAdminKey("updateAdminKey").logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateAdminKeyToEmpty() {
         return defaultHapiSpec("updateAdminKeyToEmpty")
                 .given(newKeyNamed("adminKey"), createTopic("testTopic").adminKeyName("adminKey"))
@@ -188,7 +188,7 @@ public class TopicUpdateSuite extends HapiSuite {
                 .then(getTopicInfo("testTopic").hasNoAdminKey().logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateMultipleFields() {
         long expirationTimestamp = Instant.now().getEpochSecond() + 10000000; // more than default.autorenew
         // .secs=7000000
@@ -222,7 +222,7 @@ public class TopicUpdateSuite extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec expirationTimestampIsValidated() {
         long now = Instant.now().getEpochSecond();
         return defaultHapiSpec("expirationTimestampIsValidated")
@@ -238,7 +238,7 @@ public class TopicUpdateSuite extends HapiSuite {
     }
 
     /* If admin key is not set, only expiration timestamp updates are allowed */
-    @HapiTest
+    @HapiTests
     private HapiSpec updateExpiryOnTopicWithNoAdminKey() {
         long overlyDistantNewExpiry = Instant.now().getEpochSecond() + defaultMaxLifetime + 12_345L;
         long reasonableNewExpiry = Instant.now().getEpochSecond() + defaultMaxLifetime - 12_345L;
@@ -250,7 +250,7 @@ public class TopicUpdateSuite extends HapiSuite {
                 .then(getTopicInfo("testTopic").hasExpiry(reasonableNewExpiry));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec clearingAdminKeyWhenAutoRenewAccountPresent() {
         return defaultHapiSpec("clearingAdminKeyWhenAutoRenewAccountPresent")
                 .given(
@@ -263,7 +263,7 @@ public class TopicUpdateSuite extends HapiSuite {
                 .then(getTopicInfo("testTopic").hasNoAdminKey());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateSubmitKeyOnTopicWithNoAdminKeyFails() {
         return defaultHapiSpec("updateSubmitKeyOnTopicWithNoAdminKeyFails")
                 .given(newKeyNamed("submitKey"), createTopic("testTopic"))
@@ -271,7 +271,7 @@ public class TopicUpdateSuite extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec feeAsExpected() {
         return defaultHapiSpec("feeAsExpected")
                 .given(

@@ -34,7 +34,7 @@ import static com.hedera.services.bdd.suites.utils.MiscEETUtils.metadata;
 import static com.hederahashgraph.api.proto.java.TokenType.NON_FUNGIBLE_UNIQUE;
 
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -89,7 +89,7 @@ public class AllBaseOpFeesSuite extends HapiSuite {
                 NftMintsScaleLinearlyBasedOnNumberOfSignatures()));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec baseNftMintOperationIsChargedExpectedFee() {
         final var standard100ByteMetadata = ByteString.copyFromUtf8(
                 "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
@@ -112,7 +112,7 @@ public class AllBaseOpFeesSuite extends HapiSuite {
                 .then(validateChargedUsdWithin(BASE_TXN, EXPECTED_NFT_MINT_PRICE_USD, ALLOWED_DIFFERENCE_PERCENTAGE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec NftMintsScaleLinearlyBasedOnNumberOfSerialNumbers() {
         final var expectedFee = 10 * EXPECTED_NFT_MINT_PRICE_USD;
         final var standard100ByteMetadata = ByteString.copyFromUtf8(
@@ -148,7 +148,7 @@ public class AllBaseOpFeesSuite extends HapiSuite {
                 .then(validateChargedUsdWithin(BASE_TXN, expectedFee, ALLOWED_DIFFERENCE_PERCENTAGE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec NftMintsScaleLinearlyBasedOnNumberOfSignatures() {
         final var numOfSigs = 10;
         final var extraSigPrice = 0.0006016996;
@@ -174,7 +174,7 @@ public class AllBaseOpFeesSuite extends HapiSuite {
                 .then(validateChargedUsdWithin("moreSigsTxn", expectedFee, ALLOWED_DIFFERENCE_PERCENTAGE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec baseNftWipeOperationIsChargedExpectedFee() {
         return defaultHapiSpec("BaseUniqueWipeOperationIsChargedExpectedFee")
                 .given(
@@ -200,7 +200,7 @@ public class AllBaseOpFeesSuite extends HapiSuite {
                 .then(validateChargedUsdWithin(BASE_TXN, EXPECTED_NFT_WIPE_PRICE_USD, 0.01));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec baseNftBurnOperationIsChargedExpectedFee() {
         return defaultHapiSpec("BaseUniqueBurnOperationIsChargedExpectedFee")
                 .given(
@@ -221,7 +221,7 @@ public class AllBaseOpFeesSuite extends HapiSuite {
                 .then(validateChargedUsdWithin(BASE_TXN, EXPECTED_NFT_BURN_PRICE_USD, 0.01));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec baseNftFreezeUnfreezeChargedAsExpected() {
         return defaultHapiSpec("baseNftFreezeUnfreezeChargedAsExpected")
                 .given(
@@ -259,7 +259,7 @@ public class AllBaseOpFeesSuite extends HapiSuite {
                         validateChargedUsdWithin(UNFREEZE, EXPECTED_UNFREEZE_PRICE_USD, ALLOWED_DIFFERENCE_PERCENTAGE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec baseCommonFreezeUnfreezeChargedAsExpected() {
         return defaultHapiSpec("baseCommonFreezeUnfreezeChargedAsExpected")
                 .given(

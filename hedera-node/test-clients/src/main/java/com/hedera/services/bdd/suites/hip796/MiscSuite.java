@@ -54,7 +54,7 @@ import static com.hedera.services.bdd.suites.hip796.operations.TokenFeature.WIPI
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SPENDER_DOES_NOT_HAVE_ALLOWANCE;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
 import com.hedera.services.bdd.suites.hip796.operations.DesiredAccountTokenRelation;
@@ -93,7 +93,7 @@ public class MiscSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec tokenOpsUnchangedWithPartitionDefinitions() {
         return defaultHapiSpec("TokenOpsUnchangedWithPartitionDefinitions")
                 .given(
@@ -141,7 +141,7 @@ public class MiscSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec rentNotYetChargedForPartitionAndDefinitions() {
         return propertyPreservingHapiSpec("RentNotYetChargedForPartitionAndDefinitions")
                 .preserving("ledger.autoRenewPeriod.minDuration")
@@ -182,7 +182,7 @@ public class MiscSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec approvalAllowanceSpecificPartition() {
         return defaultHapiSpec("ApprovalAllowanceSpecificPartition")
                 .given(
@@ -242,7 +242,7 @@ public class MiscSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec accountExpiryAndReclamationIsNotEnabled() {
         return propertyPreservingHapiSpec("AccountExpiryAndReclamationIsNotEnabled")
                 .preserving("ledger.autoRenewPeriod.minDuration")
@@ -279,7 +279,7 @@ public class MiscSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec accountDeletionWithTokenHoldings() {
         return defaultHapiSpec("AccountDeletionWithTokenHoldings")
                 .given(fungibleTokenWithFeatures(PARTITIONING, WIPING)
@@ -304,7 +304,7 @@ public class MiscSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec customFeesAtTokenDefinitionLevel() {
         return defaultHapiSpec("CustomFeesAtTokenDefinitionLevel")
                 .given(fungibleTokenWithFeatures(PARTITIONING, CUSTOM_FEE_SCHEDULE_MANAGEMENT)

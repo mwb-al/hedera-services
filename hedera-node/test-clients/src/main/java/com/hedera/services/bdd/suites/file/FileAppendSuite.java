@@ -25,7 +25,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.newKeyListNamed;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.newKeyNamed;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.validateChargedUsdWithin;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -52,7 +52,7 @@ public class FileAppendSuite extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec baseOpsHaveExpectedPrices() {
         final var civilian = "NonExemptPayer";
 
@@ -85,7 +85,7 @@ public class FileAppendSuite extends HapiSuite {
                 .then(validateChargedUsdWithin(baseAppend, expectedAppendFeesPriceUsd, 0.01));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec vanillaAppendSucceeds() {
         final byte[] first4K = randomUtf8Bytes(BYTES_4K);
         final byte[] next4k = randomUtf8Bytes(BYTES_4K);

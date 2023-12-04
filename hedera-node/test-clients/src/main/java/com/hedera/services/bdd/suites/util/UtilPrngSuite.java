@@ -26,7 +26,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.validateChargedUsdW
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_PRNG_RANGE;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OK;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -54,7 +54,7 @@ public class UtilPrngSuite extends HapiSuite {
         return List.of(happyPathWorksForRangeAndBitString(), failsInPreCheckForNegativeRange(), usdFeeAsExpected());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec usdFeeAsExpected() {
         double baseFee = 0.001;
         double plusRangeFee = 0.0010010316;
@@ -82,7 +82,7 @@ public class UtilPrngSuite extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec failsInPreCheckForNegativeRange() {
         return defaultHapiSpec("failsInPreCheckForNegativeRange")
                 .given(
@@ -98,7 +98,7 @@ public class UtilPrngSuite extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec happyPathWorksForRangeAndBitString() {
         final var rangeTxn = "prngWithRange";
         final var rangeTxn1 = "prngWithRange1";

@@ -31,7 +31,7 @@ import static com.hedera.services.bdd.suites.hip796.operations.TokenFeature.PART
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_ACCOUNT_AMOUNTS;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_NFT_ID;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
 import java.util.List;
@@ -67,7 +67,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canLockSubsetOfUnlockedTokens() {
         return defaultHapiSpec("CanLockSubsetOfUnlockedTokens")
                 .given(fungibleTokenWithFeatures(LOCKING).withRelation(ALICE))
@@ -96,7 +96,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canLockSubsetOfUnlockedTokensInPartition() {
         return defaultHapiSpec("CanLockSubsetOfUnlockedTokensInPartition")
                 .given(fungibleTokenWithFeatures(LOCKING, PARTITIONING)
@@ -119,7 +119,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canUnlockSubsetOfLockedTokens() {
         return defaultHapiSpec("CanLockSubsetOfUnlockedTokens")
                 .given(fungibleTokenWithFeatures(LOCKING).withRelation(ALICE))
@@ -144,7 +144,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canUnlockSubsetOfLockedTokensInPartition() {
         return defaultHapiSpec("CanUnlockSubsetOfLockedTokensInPartition")
                 .given(fungibleTokenWithFeatures(LOCKING)
@@ -171,7 +171,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canLockSpecificNFTSerials() {
         return defaultHapiSpec("CanLockSpecificNFTSerials")
                 .given(nonFungibleTokenWithFeatures(LOCKING).withRelation(ALICE, r -> r.ownedSerialNos(1L, 2L)))
@@ -193,7 +193,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canLockSpecificNFTSerialsInPartition() {
         return defaultHapiSpec("CanLockSpecificNFTSerialsInPartition")
                 .given(nonFungibleTokenWithFeatures(LOCKING, PARTITIONING)
@@ -218,7 +218,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canUnlockSpecificNFTSerials() {
         return defaultHapiSpec("CanUnlockSpecificNFTSerials")
                 .given(nonFungibleTokenWithFeatures(LOCKING).withRelation(ALICE, r -> r.ownedSerialNos(1L, 2L)))
@@ -241,7 +241,7 @@ public class LockSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canUnlockSpecificNFTSerialsInPartition() {
         return defaultHapiSpec("CanUnlockSpecificNFTSerialsInPartition")
                 .given(nonFungibleTokenWithFeatures(LOCKING, PARTITIONING)

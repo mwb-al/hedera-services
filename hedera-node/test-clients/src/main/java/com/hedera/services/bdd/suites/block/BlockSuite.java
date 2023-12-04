@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import com.google.common.primitives.Longs;
 import com.hedera.node.app.hapi.utils.ethereum.EthTxData;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -62,7 +62,7 @@ public class BlockSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5960")
-    @HapiTest
+    @HapiTests
     private HapiSpec blck003ReturnsTimestampOfTheBlock() {
         final var contract = "EmitBlockTimestamp";
         final var firstCall = "firstCall";
@@ -125,7 +125,7 @@ public class BlockSuite extends HapiSuite {
                 }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec blck001And002And003And004ReturnsCorrectBlockProperties() {
         final var contract = "EmitBlockTimestamp";
         final var firstBlock = "firstBlock";

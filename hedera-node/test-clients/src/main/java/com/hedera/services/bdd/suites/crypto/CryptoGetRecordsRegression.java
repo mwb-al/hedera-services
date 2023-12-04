@@ -35,7 +35,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_SIGNAT
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_TRANSACTION_BODY;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.assertions.AssertUtils;
@@ -77,7 +77,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
         });
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec succeedsNormally() {
         String memo = "Dim galleries, dusky corridors got past...";
 
@@ -96,7 +96,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
                                 .payer(LOW_THRESH_PAYER))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec failsForMissingAccount() {
         return defaultHapiSpec("FailsForMissingAccount")
                 .given()
@@ -106,7 +106,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
                         getAccountRecords("1.2.3").nodePayment(123L).hasAnswerOnlyPrecheck(INVALID_ACCOUNT_ID));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec failsForMalformedPayment() {
         return defaultHapiSpec("FailsForMalformedPayment")
                 .given(newKeyNamed("wrong").shape(SIMPLE))
@@ -114,7 +114,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
                 .then(getAccountRecords(GENESIS).signedBy("wrong").hasAnswerOnlyPrecheck(INVALID_SIGNATURE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec failsForUnfundablePayment() {
         long everything = 1_234L;
         return defaultHapiSpec("FailsForUnfundablePayment")
@@ -126,7 +126,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
                         .hasAnswerOnlyPrecheck(INSUFFICIENT_PAYER_BALANCE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec failsForInsufficientPayment() {
         return defaultHapiSpec("FailsForInsufficientPayment")
                 .given(cryptoCreate(PAYER))
@@ -137,7 +137,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
                         .hasAnswerOnlyPrecheck(INSUFFICIENT_TX_FEE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec failsForInvalidTrxBody() {
         return defaultHapiSpec("failsForInvalidTrxBody")
                 .given()
@@ -147,7 +147,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
                         .hasAnswerOnlyPrecheck(INVALID_TRANSACTION_BODY));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec failsForDeletedAccount() {
         return defaultHapiSpec("FailsForDeletedAccount")
                 .given(cryptoCreate(ACCOUNT_TO_BE_DELETED))
@@ -159,7 +159,7 @@ public class CryptoGetRecordsRegression extends HapiSuite {
                                 .hasAnswerOnlyPrecheck(ACCOUNT_DELETED));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec getAccountRecords_testForDuplicates() {
         return defaultHapiSpec("testForDuplicateAccountRecords")
                 .given(

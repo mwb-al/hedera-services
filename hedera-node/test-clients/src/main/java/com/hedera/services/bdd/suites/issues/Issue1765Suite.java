@@ -30,7 +30,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.takeBalanceSnapshot
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.validateTransferListForBalances;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.withOpContext;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.keys.KeyFactory;
@@ -64,7 +64,7 @@ public class Issue1765Suite extends HapiSuite {
                 get950Balance());
     }
 
-    @HapiTest
+    @HapiTests
     private static HapiSpec get950Balance() {
         return defaultHapiSpec("Get950Balance")
                 .given()
@@ -72,7 +72,7 @@ public class Issue1765Suite extends HapiSuite {
                 .then(getAccountBalance("0.0.950").logged());
     }
 
-    @HapiTest
+    @HapiTests
     private static HapiSpec recordOfInvalidContractUpdateSanityChecks() {
         final long ADEQUATE_FEE = 100_000_000L;
         final String INVALID_CONTRACT = IMAGINARY;
@@ -95,7 +95,7 @@ public class Issue1765Suite extends HapiSuite {
                                 .hasPriority(recordWith().memo(THE_MEMO_IS)));
     }
 
-    @HapiTest
+    @HapiTests
     private static HapiSpec recordOfInvalidFileUpdateSanityChecks() {
         final long ADEQUATE_FEE = 100_000_000L;
         final String INVALID_FILE = IMAGINARY;
@@ -118,7 +118,7 @@ public class Issue1765Suite extends HapiSuite {
                                 .hasPriority(recordWith().memo(THE_MEMO_IS)));
     }
 
-    @HapiTest
+    @HapiTests
     private static HapiSpec recordOfInvalidFileAppendSanityChecks() {
         final long ADEQUATE_FEE = 100_000_000L;
         final String INVALID_FILE = IMAGINARY;

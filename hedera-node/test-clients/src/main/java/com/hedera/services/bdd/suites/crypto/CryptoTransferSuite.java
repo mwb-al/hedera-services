@@ -128,7 +128,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.protobuf.ByteString;
 import com.hedera.node.app.hapi.utils.ByteStringUtils;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -251,7 +251,7 @@ public class CryptoTransferSuite extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec okToRepeatSerialNumbersInWipeList() {
         final var ownerWith4AutoAssoc = "ownerWith4AutoAssoc";
         return defaultHapiSpec("OkToRepeatSerialNumbersInWipeList")
@@ -288,7 +288,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         getAccountBalance(ownerWith4AutoAssoc).hasTokenBalance(NON_FUNGIBLE_TOKEN, 0L));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec okToRepeatSerialNumbersInBurnList() {
         return defaultHapiSpec("okToRepeatSerialNumbersInBurnList")
                 .given(
@@ -320,7 +320,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         getAccountBalance(TREASURY).hasTokenBalance(NON_FUNGIBLE_TOKEN, 0L));
     }
 
-    @HapiTest // fees differ expected 46889349 actual 46887567
+    @HapiTests // fees differ expected 46889349 actual 46887567
     private HapiSpec canUseAliasAndAccountCombinations() {
         final AtomicReference<TokenID> ftId = new AtomicReference<>();
         final AtomicReference<TokenID> nftId = new AtomicReference<>();
@@ -370,7 +370,7 @@ public class CryptoTransferSuite extends HapiSuite {
                 .then(getTxnRecord(NFT_XFER).logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec aliasKeysAreValidated() {
         final var validAlias = "validAlias";
         final var invalidAlias = "invalidAlias";
@@ -401,7 +401,7 @@ public class CryptoTransferSuite extends HapiSuite {
     }
 
     // https://github.com/hashgraph/hedera-services/issues/2875
-    @HapiTest
+    @HapiTests
     private HapiSpec canUseMirrorAliasesForNonContractXfers() {
         final AtomicReference<TokenID> ftId = new AtomicReference<>();
         final AtomicReference<TokenID> nftId = new AtomicReference<>();
@@ -608,7 +608,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                                 .between(partyLiteral.get(), counterLiteral.get()))))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec cannotTransferFromImmutableAccounts() {
         final var contract = "PayableConstructor";
         final var multiKey = "swiss";
@@ -707,7 +707,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                 .hasKnownStatus(INVALID_ALLOWANCE_OWNER_ID));
     }
 
-    @HapiTest // fees differ 44071858 vs 44071845
+    @HapiTests // fees differ 44071858 vs 44071845
     private HapiSpec allowanceTransfersWithComplexTransfersWork() {
         return defaultHapiSpec("AllowanceTransfersWithComplexTransfersWork", NONDETERMINISTIC_TRANSACTION_FEES)
                 .given(
@@ -831,7 +831,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                 .has(accountWith().balance(ONE_HBAR)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec allowanceTransfersWorkAsExpected() {
         return defaultHapiSpec("AllowanceTransfersWorkAsExpected", NONDETERMINISTIC_TRANSACTION_FEES)
                 .given(
@@ -1069,7 +1069,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                         .nftApprovedAllowancesContaining(NON_FUNGIBLE_TOKEN, SPENDER)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec checksExpectedDecimalsForFungibleTokenTransferList() {
         return defaultHapiSpec("checksExpectedDecimalsForFungibleTokenTransferList", NONDETERMINISTIC_TRANSACTION_FEES)
                 .given(
@@ -1114,7 +1114,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                 .logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nftTransfersCannotRepeatSerialNos() {
         final var aParty = "aParty";
         final var bParty = "bParty";
@@ -1158,7 +1158,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         .hasPrecheck(INVALID_ACCOUNT_AMOUNTS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nftSelfTransfersRejectedBothInPrecheckAndHandle() {
         final var owningParty = OWNING_PARTY;
         final var multipurpose = MULTI_KEY;
@@ -1192,7 +1192,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         getAccountInfo(owningParty).has(accountWith().noChangesFromSnapshot(owningParty)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hbarAndFungibleSelfTransfersRejectedBothInPrecheckAndHandle() {
         final var uncheckedHbarTxn = "uncheckedHbarTxn";
         final var uncheckedFtTxn = "uncheckedFtTxn";
@@ -1233,7 +1233,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         getAccountInfo(OWNING_PARTY).has(accountWith().noChangesFromSnapshot(OWNING_PARTY)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec dissociatedRoyaltyCollectorsCanUseAutoAssociation() {
         final var commonWithCustomFees = "commonWithCustomFees";
         final var fractionalCollector = "fractionalCollector";
@@ -1292,7 +1292,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                                         .balance(5)))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec royaltyCollectorsCanUseAutoAssociation() {
         final var uniqueWithRoyalty = "uniqueWithRoyalty";
         final var firstFungible = "firstFungible";
@@ -1400,7 +1400,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                                                 .balance(exchangeAmount / 15)))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec royaltyCollectorsCannotUseAutoAssociationWithoutOpenSlots() {
         final var uniqueWithRoyalty = "uniqueWithRoyalty";
         final var someFungible = "firstFungible";
@@ -1452,7 +1452,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                                         .balance(1)))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec autoAssociationRequiresOpenSlots() {
         final String tokenA = "tokenA";
         final String tokenB = "tokenB";
@@ -1517,7 +1517,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         cryptoTransfer(moving(1, tokenB).between(TREASURY, firstUser)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec baseCryptoTransferFeeChargedAsExpected() {
         final var expectedHbarXferPriceUsd = 0.0001;
         final var expectedHtsXferPriceUsd = 0.001;
@@ -1607,7 +1607,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         validateChargedUsdWithin(nftXferTxnWithCustomFee, expectedNftXferWithCustomFeePriceUsd, 0.3));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec okToSetInvalidPaymentHeaderForCostAnswer() {
         return defaultHapiSpec("OkToSetInvalidPaymentHeaderForCostAnswer")
                 .given(cryptoTransfer(tinyBarsFromTo(DEFAULT_PAYER, FUNDING, 1L))
@@ -1619,7 +1619,7 @@ public class CryptoTransferSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5960")
-    @HapiTest
+    @HapiTests
     private HapiSpec tokenTransferFeesScaleAsExpected() {
         return defaultHapiSpec("TokenTransferFeesScaleAsExpected", NONDETERMINISTIC_TRANSACTION_FEES)
                 .given(
@@ -1759,7 +1759,7 @@ public class CryptoTransferSuite extends HapiSuite {
         return String.format(fmt, d);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferToNonAccountEntitiesReturnsInvalidAccountId() {
         AtomicReference<String> invalidAccountId = new AtomicReference<>();
 
@@ -1778,7 +1778,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                 .hasKnownStatus(INVALID_ACCOUNT_ID)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec complexKeyAcctPaysForOwnTransfer() {
         SigControl enoughUniqueSigs = SigControl.threshSigs(
                 2,
@@ -1797,7 +1797,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         .fee(ONE_HUNDRED_HBARS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec twoComplexKeysRequired() {
         SigControl payerShape = threshOf(2, threshOf(1, 7), threshOf(3, 7));
         SigControl receiverShape = SigControl.threshSigs(3, threshOf(2, 2), threshOf(3, 5), ON);
@@ -1826,7 +1826,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         .fee(ONE_HUNDRED_HBARS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec specialAccountsBalanceCheck() {
         return defaultHapiSpec("SpecialAccountsBalanceCheck")
                 .given(snapshotMode(FUZZY_MATCH_AGAINST_MONO_STREAMS))
@@ -1836,7 +1836,7 @@ public class CryptoTransferSuite extends HapiSuite {
                         .toArray(HapiSpecOperation[]::new));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferWithMissingAccountGetsInvalidAccountId() {
         return defaultHapiSpec("transferWithMissingAccountGetsInvalidAccountId", EXPECT_STREAMLINED_INGEST_RECORDS)
                 .given(cryptoCreate(PAYEE_SIG_REQ).receiverSigRequired(true))
@@ -1846,7 +1846,7 @@ public class CryptoTransferSuite extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec vanillaTransferSucceeds() {
         long initialBalance = HapiSpecSetup.getDefaultInstance().defaultBalance();
 
@@ -1877,7 +1877,7 @@ public class CryptoTransferSuite extends HapiSuite {
                                         .noAllowances()));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForNFTWithCustomFeesWithAllowance() {
         final var NFT_TOKEN_WITH_FIXED_HBAR_FEE = "nftTokenWithFixedHbarFee";
         final var NFT_TOKEN_WITH_FIXED_TOKEN_FEE = "nftTokenWithFixedTokenFee";
@@ -2027,7 +2027,7 @@ public class CryptoTransferSuite extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForFungibleTokenWithCustomFeesWithAllowance() {
         final var FUNGIBLE_TOKEN_WITH_FIXED_HBAR_FEE = "fungibleTokenWithFixedHbarFee";
         final var FUNGIBLE_TOKEN_WITH_FIXED_TOKEN_FEE = "fungibleTokenWithFixedTokenFee";

@@ -24,7 +24,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.runWithProvider;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.withOpContext;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiPropertySource;
 import com.hedera.services.bdd.spec.HapiSpec;
@@ -61,7 +61,7 @@ public class FileQueriesStressTests extends HapiSuite {
         });
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec getFileContentsStress() {
         return defaultHapiSpec("getFileContentsStress")
                 .given()
@@ -73,7 +73,7 @@ public class FileQueriesStressTests extends HapiSuite {
                                 .maxOpsPerSec(maxOpsPerSec::get));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec getFileInfoStress() {
         return defaultHapiSpec("getFileInfoStress")
                 .given()

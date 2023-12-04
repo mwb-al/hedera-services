@@ -21,22 +21,22 @@ import static com.hedera.node.app.service.contract.impl.utils.ConversionUtils.as
 import com.hedera.hapi.node.base.TokenID;
 
 /**
- * Constants used in the {@link AssociationsXTest}, extracted here to improve readability of that file.
+ * Constants used in the {@link AssociationsXTests}, extracted here to improve readability of that file.
  */
 public class AssociationsXTestConstants {
     static final TokenID A_TOKEN_ID = TokenID.newBuilder().tokenNum(111111L).build();
-    static final com.esaulpaugh.headlong.abi.Address A_TOKEN_ADDRESS = AbstractContractXTest.asHeadlongAddress(
+    static final com.esaulpaugh.headlong.abi.Address A_TOKEN_ADDRESS = AbstractContractXTests.asHeadlongAddress(
             asLongZeroAddress(A_TOKEN_ID.tokenNum()).toArray());
     static final TokenID B_TOKEN_ID = TokenID.newBuilder().tokenNum(222222L).build();
-    static final com.esaulpaugh.headlong.abi.Address B_TOKEN_ADDRESS = AbstractContractXTest.asHeadlongAddress(
+    static final com.esaulpaugh.headlong.abi.Address B_TOKEN_ADDRESS = AbstractContractXTests.asHeadlongAddress(
             asLongZeroAddress(B_TOKEN_ID.tokenNum()).toArray());
     static final TokenID C_TOKEN_ID = TokenID.newBuilder().tokenNum(333333L).build();
-    static final com.esaulpaugh.headlong.abi.Address C_TOKEN_ADDRESS = AbstractContractXTest.asHeadlongAddress(
+    static final com.esaulpaugh.headlong.abi.Address C_TOKEN_ADDRESS = AbstractContractXTests.asHeadlongAddress(
             asLongZeroAddress(C_TOKEN_ID.tokenNum()).toArray());
     static final TokenID D_TOKEN_ID = TokenID.newBuilder().tokenNum(444444L).build();
-    static final com.esaulpaugh.headlong.abi.Address D_TOKEN_ADDRESS = AbstractContractXTest.asHeadlongAddress(
+    static final com.esaulpaugh.headlong.abi.Address D_TOKEN_ADDRESS = AbstractContractXTests.asHeadlongAddress(
             asLongZeroAddress(D_TOKEN_ID.tokenNum()).toArray());
     static final TokenID E_TOKEN_ID = TokenID.newBuilder().tokenNum(555555L).build();
-    static final com.esaulpaugh.headlong.abi.Address E_TOKEN_ADDRESS = AbstractContractXTest.asHeadlongAddress(
+    static final com.esaulpaugh.headlong.abi.Address E_TOKEN_ADDRESS = AbstractContractXTests.asHeadlongAddress(
             asLongZeroAddress(E_TOKEN_ID.tokenNum()).toArray());
 }

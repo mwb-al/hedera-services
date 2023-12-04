@@ -51,7 +51,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.*;
 import static com.hederahashgraph.api.proto.java.SubType.TOKEN_NON_FUNGIBLE_UNIQUE;
 
 import com.hedera.node.app.hapi.utils.contracts.ParsingConstants.FunctionType;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.assertions.NonFungibleTransfers;
@@ -113,7 +113,7 @@ public class ContractMintHTSSuite extends HapiSuite {
         return List.of(transferNftAfterNestedMint());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferNftAfterNestedMint() {
         final var nestedTransferTxn = "nestedTransferTxn";
 
@@ -212,7 +212,7 @@ public class ContractMintHTSSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5669")
-    @HapiTest
+    @HapiTests
     private HapiSpec rollbackOnFailedMintAfterFungibleTransfer() {
         final var failedMintTxn = "failedMintTxn";
 

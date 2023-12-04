@@ -26,7 +26,7 @@ import static com.hedera.services.bdd.spec.keys.SigControl.ON;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.fileCreate;
 
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.keys.ControlForKey;
@@ -51,7 +51,7 @@ public class CreateSuccessSpec extends HapiSuite {
         return List.of(targetsAppear());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec targetsAppear() {
         var lifetime = 100_000L;
         var requestedExpiry = Instant.now().getEpochSecond() + lifetime;

@@ -36,7 +36,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_SIGNAT
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OK;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -74,7 +74,7 @@ public class MiscCryptoSuite extends HapiSuite {
         return List.of(updateWithOutOfDateKeyFails());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec sysAccountKeyUpdateBySpecialWontNeedNewKeyTxnSign() {
         String sysAccount = "0.0.977";
         String randomAccountA = "randomAccountA";
@@ -129,7 +129,7 @@ public class MiscCryptoSuite extends HapiSuite {
                                 .logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec getsGenesisBalance() {
         return defaultHapiSpec("GetsGenesisBalance")
                 .given()
@@ -137,7 +137,7 @@ public class MiscCryptoSuite extends HapiSuite {
                 .then(getAccountBalance(GENESIS).logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transferChangesBalance() {
         return defaultHapiSpec("TransferChangesBalance")
                 .given(cryptoCreate("newPayee").balance(0L))
@@ -145,7 +145,7 @@ public class MiscCryptoSuite extends HapiSuite {
                 .then(getAccountBalance("newPayee").hasTinyBars(1_000_000_000L).logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec updateWithOutOfDateKeyFails() {
         return defaultHapiSpec("UpdateWithOutOfDateKeyFails")
                 .given(

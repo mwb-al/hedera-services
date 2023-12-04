@@ -32,7 +32,7 @@ import static com.hedera.services.bdd.suites.hip796.operations.TokenFeature.PART
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INSUFFICIENT_ACCOUNT_BALANCE;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SENDER_DOES_NOT_OWN_NFT_SERIAL_NO;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
 import java.util.List;
@@ -55,7 +55,7 @@ public class GeneralSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canCreateFungibleTokenWithLockingAndPartitioning() {
         return defaultHapiSpec("CanCreateFungibleTokenWithLockingAndPartitioning")
                 .given(fungibleTokenWithFeatures(PARTITIONING, LOCKING)
@@ -82,7 +82,7 @@ public class GeneralSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canCreateNFTWithLockingAndPartitioning() {
         return defaultHapiSpec("CanCreateNFTWithLockingAndPartitioning")
                 .given(nonFungibleTokenWithFeatures(PARTITIONING, LOCKING)

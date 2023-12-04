@@ -36,7 +36,7 @@ import static com.hedera.services.bdd.suites.hip796.operations.TokenFeature.INTE
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.CONTRACT_REVERT_EXECUTED;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_SIGNATURE;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
 import java.util.List;
@@ -68,7 +68,7 @@ public class InterPartitionMovementSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     private HapiSpec partitionMoveWithoutUserSignature() {
         return defaultHapiSpec("PartitionMoveWithoutUserSignature")
                 .given(fungibleTokenWithFeatures(INTER_PARTITION_MANAGEMENT)
@@ -94,7 +94,7 @@ public class InterPartitionMovementSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     private HapiSpec partitionMoveWithUserSignature() {
         return defaultHapiSpec("PartitionMoveWithUserSignature")
                 .given(fungibleTokenWithFeatures(INTER_PARTITION_MANAGEMENT)
@@ -125,7 +125,7 @@ public class InterPartitionMovementSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec moveNftsBetweenUserPartitionsWithoutUserSignature() {
         return defaultHapiSpec("MoveNftsBetweenUserPartitionsWithoutUserSignature")
                 .given(nonFungibleTokenWithFeatures(INTER_PARTITION_MANAGEMENT)
@@ -149,7 +149,7 @@ public class InterPartitionMovementSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec moveNftsBetweenPartitionsWithUserSignature() {
         return defaultHapiSpec("MoveNftsBetweenPartitionsWithUserSignature")
                 .given(nonFungibleTokenWithFeatures(INTER_PARTITION_MANAGEMENT)
@@ -186,7 +186,7 @@ public class InterPartitionMovementSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec moveTokensViaSmartContractAsPartitionMoveKey() {
         return defaultHapiSpec("MoveTokensViaSmartContractAsPartitionMoveKey")
                 .given(fungibleTokenWithFeatures(INTER_PARTITION_MANAGEMENT)

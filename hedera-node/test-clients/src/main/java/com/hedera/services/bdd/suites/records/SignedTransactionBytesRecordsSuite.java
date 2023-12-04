@@ -30,7 +30,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_TRANSA
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_TRANSACTION_BODY;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.RECORD_NOT_FOUND;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -61,7 +61,7 @@ public class SignedTransactionBytesRecordsSuite extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transactionsWithOnlySigMap() {
         final var contract = "BalanceLookup";
         return defaultHapiSpec("TransactionsWithOnlySigMap")
@@ -86,7 +86,7 @@ public class SignedTransactionBytesRecordsSuite extends HapiSuite {
                         getTxnRecord("failedContractTransaction").hasCostAnswerPrecheck(INVALID_ACCOUNT_ID));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transactionsWithSignedTxnBytesAndSigMap() {
         return defaultHapiSpec("TransactionsWithSignedTxnBytesAndSigMap")
                 .given()
@@ -97,7 +97,7 @@ public class SignedTransactionBytesRecordsSuite extends HapiSuite {
                 .then(getTxnRecord("failedConsensusTransaction").hasAnswerOnlyPrecheck(RECORD_NOT_FOUND));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec transactionsWithSignedTxnBytesAndBodyBytes() {
         return defaultHapiSpec("TransactionsWithSignedTxnBytesAndBodyBytes")
                 .given()

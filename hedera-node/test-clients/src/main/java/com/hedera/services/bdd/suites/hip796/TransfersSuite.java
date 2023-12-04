@@ -28,7 +28,7 @@ import static com.hedera.services.bdd.suites.hip796.operations.TokenFeature.LOCK
 import static com.hedera.services.bdd.suites.hip796.operations.TokenFeature.PARTITIONING;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_ACCOUNT_AMOUNTS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
 import java.util.List;
@@ -53,7 +53,7 @@ public class TransfersSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canTransferTokensToSamePartitionUser() {
         return defaultHapiSpec("CanTransferTokensToSamePartitionUser")
                 .given(fungibleTokenWithFeatures(PARTITIONING)
@@ -72,7 +72,7 @@ public class TransfersSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canTransferTokensToUserWithAutoAssociation() {
         return defaultHapiSpec("CanTransferTokensToUserWithAutoAssociation")
                 .given(fungibleTokenWithFeatures(PARTITIONING)
@@ -97,7 +97,7 @@ public class TransfersSuite extends HapiSuite {
      *
      * @return the HapiSpec for this HIP-796 user story
      */
-    @HapiTest
+    @HapiTests
     public HapiSpec canTransferTokensToUserAfterUnlock() {
         return defaultHapiSpec("CanTransferTokensToUserPostUnlock")
                 .given(fungibleTokenWithFeatures(PARTITIONING, LOCKING)

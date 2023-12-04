@@ -107,7 +107,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.esaulpaugh.headlong.abi.Address;
 import com.google.protobuf.ByteString;
 import com.hedera.node.app.hapi.utils.contracts.ParsingConstants.FunctionType;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiPropertySource;
 import com.hedera.services.bdd.spec.HapiSpec;
@@ -195,7 +195,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5669")
-    @HapiTest
+    @HapiTests
     private HapiSpec allLogOpcodesResolveExpectedContractId() {
         final var contract = "OuterCreator";
 
@@ -229,7 +229,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     // https://github.com/hashgraph/hedera-services/issues/2868
-    @HapiTest
+    @HapiTests
     private HapiSpec inlineCreate2CanFailSafely() {
         final var tcValue = 1_234L;
         final var contract = "RevertingCreateFactory";
@@ -276,7 +276,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5669")
-    @HapiTest
+    @HapiTests
     private HapiSpec inlineCreateCanFailSafely() {
         final var tcValue = 1_234L;
         final var creation = CREATION;
@@ -323,7 +323,7 @@ public class Create2OperationSuite extends HapiSuite {
                                         factoryEntityNum.get() + 1))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec canAssociateInConstructor() {
         final var token = "token";
         final var contract = "SelfAssociating";
@@ -345,7 +345,7 @@ public class Create2OperationSuite extends HapiSuite {
                         getContractInfo(contract).logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec payableCreate2WorksAsExpected() {
         final var contract = "PayableCreate2Deploy";
         AtomicReference<String> tcMirrorAddr2 = new AtomicReference<>();
@@ -370,7 +370,7 @@ public class Create2OperationSuite extends HapiSuite {
     // https://github.com/hashgraph/hedera-services/issues/2867
     // https://github.com/hashgraph/hedera-services/issues/2868
     @SuppressWarnings("java:S5960")
-    @HapiTest
+    @HapiTests
     private HapiSpec create2FactoryWorksAsExpected() {
         final var tcValue = 1_234L;
         final var contract = "Create2Factory";
@@ -502,7 +502,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5960")
-    @HapiTest
+    @HapiTests
     private HapiSpec canMergeCreate2ChildWithHollowAccount() {
         final var tcValue = 1_234L;
         final var contract = "Create2Factory";
@@ -625,7 +625,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5960")
-    @HapiTest
+    @HapiTests
     private HapiSpec canMergeCreate2MultipleCreatesWithHollowAccount() {
         final var tcValue = 1_234L;
         final var contract = "Create2MultipleCreates";
@@ -738,7 +738,7 @@ public class Create2OperationSuite extends HapiSuite {
                         cryptoCreate("confirmingNoEntityIdCollision"));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec canCallFinalizedContractViaHapi() {
         final var contract = "FinalizedDestructible";
         final var salt = BigInteger.valueOf(1_234_567_890L);
@@ -774,7 +774,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5669")
-    @HapiTest
+    @HapiTests
     private HapiSpec eip1014AliasIsPriorityInErcOwnerPrecompile() {
         final var ercContract = "ERC721Contract";
         final var pc2User = "Create2PrecompileUser";
@@ -1018,7 +1018,7 @@ public class Create2OperationSuite extends HapiSuite {
     // https://github.com/hashgraph/hedera-services/issues/2874
     // https://github.com/hashgraph/hedera-services/issues/2925
     @SuppressWarnings("java:S5669")
-    @HapiTest
+    @HapiTests
     private HapiSpec cannotSelfDestructToMirrorAddress() {
         final var creation2 = CREATE_2_TXN;
         final var messyCreation2 = "messyCreate2Txn";
@@ -1142,7 +1142,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5669")
-    @HapiTest
+    @HapiTests
     private HapiSpec create2InputAddressIsStableWithTopLevelCallWhetherMirrorOrAliasIsUsed() {
         final var creation2 = CREATE_2_TXN;
         final var innerCreation2 = "innerCreate2Txn";
@@ -1270,7 +1270,7 @@ public class Create2OperationSuite extends HapiSuite {
     }
 
     @SuppressWarnings("java:S5669")
-    @HapiTest
+    @HapiTests
     private HapiSpec canInternallyCallAliasedAddressesOnlyViaCreate2Address() {
         final var contract = "AddressValueRet";
         final var aliasCall = "aliasCall";

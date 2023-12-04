@@ -28,7 +28,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_FILE_I
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.NOT_SUPPORTED;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OK;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.utilops.UtilVerbs;
@@ -62,7 +62,7 @@ public class SysDelSysUndelSpec extends HapiSuite {
                 distinguishesAdminPrivileges());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec distinguishesAdminPrivileges() {
         final var lifetime = THREE_MONTHS_IN_SECONDS;
 
@@ -79,7 +79,7 @@ public class SysDelSysUndelSpec extends HapiSuite {
                         systemFileDelete(ADDRESS_BOOK).payingWith(GENESIS).hasPrecheck(ENTITY_NOT_ALLOWED_TO_DELETE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemDeleteWithPastExpiryDestroysFile() {
         final var lifetime = THREE_MONTHS_IN_SECONDS;
 
@@ -93,7 +93,7 @@ public class SysDelSysUndelSpec extends HapiSuite {
                         .hasKnownStatus(INVALID_FILE_ID));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemDeleteThenUndeleteRestoresContentsAndExpiry() {
         var now = Instant.now().getEpochSecond();
         var lifetime = THREE_MONTHS_IN_SECONDS;

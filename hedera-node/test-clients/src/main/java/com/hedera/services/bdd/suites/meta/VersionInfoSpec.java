@@ -20,7 +20,7 @@ import static com.hedera.services.bdd.spec.HapiSpec.customHapiSpec;
 import static com.hedera.services.bdd.spec.HapiSpec.defaultHapiSpec;
 import static com.hedera.services.bdd.spec.queries.QueryVerbs.getVersionInfo;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.BddTestNameDoesNotMatchMethodName;
@@ -58,7 +58,7 @@ public class VersionInfoSpec extends HapiSuite {
     }
 
     @BddTestNameDoesNotMatchMethodName
-    @HapiTest
+    @HapiTests
     private HapiSpec discoversExpectedVersions() {
         if (specConfig != null) {
             return customHapiSpec("getVersionInfo")

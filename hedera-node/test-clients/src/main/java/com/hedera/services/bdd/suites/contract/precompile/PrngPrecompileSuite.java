@@ -34,7 +34,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.CONTRACT_REVER
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -135,7 +135,7 @@ public class PrngPrecompileSuite extends HapiSuite {
                         contractCallLocal(prng, GET_SEED).gas(gasToOffer));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec emptyInputCallFails() {
         final var prng = THE_PRNG_CONTRACT;
         final var emptyInputCall = "emptyInputCall";
@@ -163,7 +163,7 @@ public class PrngPrecompileSuite extends HapiSuite {
                         }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec invalidLargeInputFails() {
         final var prng = THE_PRNG_CONTRACT;
         final var largeInputCall = "largeInputCall";

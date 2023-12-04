@@ -61,7 +61,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.esaulpaugh.headlong.abi.Address;
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -104,7 +104,7 @@ public class ContractKeysStillWorkAsExpectedSuite extends HapiSuite {
                 approvalFallbacksRequiredWithoutTopLevelSigAccess());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec approvalFallbacksRequiredWithoutTopLevelSigAccess() {
         final AtomicReference<Address> fungibleTokenMirrorAddr = new AtomicReference<>();
         final AtomicReference<Address> nonFungibleTokenMirrorAddr = new AtomicReference<>();
@@ -330,7 +330,7 @@ public class ContractKeysStillWorkAsExpectedSuite extends HapiSuite {
                         .hasKnownStatus(expectedStatus)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec canStillTransferByVirtueOfContractIdInEOAThreshold() {
         final var fungibleToken = "token";
         final var managementContract = "DoTokenManagement";
@@ -393,7 +393,7 @@ public class ContractKeysStillWorkAsExpectedSuite extends HapiSuite {
                         getAccountBalance(receiver).logged().hasTokenBalance(fungibleToken, 1));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec contractKeysStillHaveSpecificityNoMatterTopLevelSignatures() {
         final var fungibleToken = "token";
         final var managementContract = "DoTokenManagement";

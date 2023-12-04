@@ -23,7 +23,7 @@ import static com.hedera.services.bdd.spec.HapiSpec.defaultHapiSpec;
 import static com.hedera.services.bdd.spec.queries.QueryVerbs.getTxnRecord;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.cryptoCreate;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -54,7 +54,7 @@ public class CrytoCreateSuiteWithUTF8 extends HapiSuite {
         return Arrays.asList(createCryptoTxvWithUTF8Memo(), cryptoCreateTxnCustomSpec());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec createCryptoTxvWithUTF8Memo() {
         return defaultHapiSpec("CreateCryptoTxvWithUTF8Memo")
                 .given(cryptoCreate("UTF8MemoTestAccount").via("utf8MemoTxn"))
@@ -62,7 +62,7 @@ public class CrytoCreateSuiteWithUTF8 extends HapiSuite {
                 .then(getTxnRecord("utf8MemoTxn").logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec cryptoCreateTxnCustomSpec() {
         return customHapiSpec("UTF8CustomSpecMemoTxn")
                 .withProperties(Map.of("default.useMemoUTF8", utf8Mode.toString()))

@@ -44,7 +44,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OK;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TRANSACTION_OVERSIZE;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.keys.KeyShape;
@@ -83,7 +83,7 @@ public class SubmitMessageSuite extends HapiSuite {
                 feeAsExpected());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec topicIdIsValidated() {
         return defaultHapiSpec("topicIdIsValidated")
                 .given(cryptoCreate("nonTopicId"))
@@ -98,7 +98,7 @@ public class SubmitMessageSuite extends HapiSuite {
                                 .hasKnownStatus(INVALID_TOPIC_ID));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec messageIsValidated() {
         return defaultHapiSpec("messageIsValidated")
                 .given(createTopic("testTopic"))
@@ -114,7 +114,7 @@ public class SubmitMessageSuite extends HapiSuite {
                                 .hasKnownStatus(INVALID_TOPIC_MESSAGE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec messageSubmissionSimple() {
         return defaultHapiSpec("messageSubmissionSimple")
                 .given(
@@ -128,7 +128,7 @@ public class SubmitMessageSuite extends HapiSuite {
                         .hasKnownStatus(SUCCESS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec messageSubmissionIncreasesSeqNo() {
         KeyShape submitKeyShape = threshOf(2, SIMPLE, SIMPLE, listOf(2));
 
@@ -140,7 +140,7 @@ public class SubmitMessageSuite extends HapiSuite {
                 .then(getTopicInfo("testTopic").hasSeqNo(1));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec messageSubmissionWithSubmitKey() {
         KeyShape submitKeyShape = threshOf(2, SIMPLE, SIMPLE, listOf(2));
 
@@ -163,7 +163,7 @@ public class SubmitMessageSuite extends HapiSuite {
                                 .hasKnownStatus(SUCCESS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec messageSubmissionMultiple() {
         final int numMessages = 10;
 
@@ -175,7 +175,7 @@ public class SubmitMessageSuite extends HapiSuite {
                 .then(sleepFor(1000), getTopicInfo("testTopic").hasSeqNo(numMessages));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec messageSubmissionOverSize() {
         final byte[] messageBytes = new byte[4096]; // 4k
         Arrays.fill(messageBytes, (byte) 0b1);
@@ -192,7 +192,7 @@ public class SubmitMessageSuite extends HapiSuite {
                         .hasKnownStatus(MESSAGE_SIZE_TOO_LARGE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec feeAsExpected() {
         final byte[] messageBytes = new byte[100]; // 4k
         Arrays.fill(messageBytes, (byte) 0b1);
@@ -209,7 +209,7 @@ public class SubmitMessageSuite extends HapiSuite {
                 .then(sleepFor(1000), validateChargedUsd("submitMessage", 0.0001));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec messageSubmissionCorrectlyUpdatesRunningHash() {
         String topic = "testTopic";
         String message1 = "Hello world!";

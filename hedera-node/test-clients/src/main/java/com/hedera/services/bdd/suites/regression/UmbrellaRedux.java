@@ -30,7 +30,7 @@ import static com.hedera.services.bdd.suites.regression.factories.RegressionProv
 import static com.hedera.services.bdd.suites.utils.sysfiles.serdes.ThrottleDefsLoader.protoDefsFromResource;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiPropertySource;
 import com.hedera.services.bdd.spec.HapiSpec;
@@ -70,7 +70,7 @@ public class UmbrellaRedux extends HapiSuite {
         });
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec umbrellaRedux() {
         var defaultThrottles = protoDefsFromResource("testSystemFiles/throttles-dev.json");
         return defaultHapiSpec("UmbrellaRedux")

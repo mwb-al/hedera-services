@@ -45,7 +45,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_TOKEN_
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TOKEN_HAS_NO_KYC_KEY;
 import static com.hederahashgraph.api.proto.java.TokenType.FUNGIBLE_COMMON;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.transactions.contract.HapiParserUtil;
@@ -102,7 +102,7 @@ public class GrantRevokeKycSuite extends HapiSuite {
         return List.of(grantRevokeKycSpecWithAliasLocalCall());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec grantRevokeKycFail() {
         final AtomicReference<TokenID> vanillaTokenID = new AtomicReference<>();
         final AtomicReference<AccountID> accountID = new AtomicReference<>();
@@ -271,7 +271,7 @@ public class GrantRevokeKycSuite extends HapiSuite {
                                                         htsPrecompileResult().withStatus(INVALID_TOKEN_ID)))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec grantRevokeKycSpecWithAliasLocalCall() {
         final AtomicReference<TokenID> vanillaTokenID = new AtomicReference<>();
         final AtomicReference<String> autoCreatedAccountId = new AtomicReference<>();

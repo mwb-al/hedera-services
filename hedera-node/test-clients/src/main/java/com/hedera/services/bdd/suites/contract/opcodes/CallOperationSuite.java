@@ -30,7 +30,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.withOpContext;
 import static com.hedera.services.bdd.suites.contract.Utils.asAddress;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_SOLIDITY_ADDRESS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.transactions.contract.HapiParserUtil;
@@ -61,7 +61,7 @@ public class CallOperationSuite extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     HapiSpec verifiesExistence() {
         final var contract = "CallOperationsChecker";
         final var INVALID_ADDRESS = "0x0000000000000000000000000000000000123456";
@@ -87,7 +87,7 @@ public class CallOperationSuite extends HapiSuite {
                         }));
     }
 
-    @HapiTest
+    @HapiTests
     HapiSpec callingContract() {
         final var contract = "CallingContract";
         final var INVALID_ADDRESS = "0x0000000000000000000000000000000000123456";

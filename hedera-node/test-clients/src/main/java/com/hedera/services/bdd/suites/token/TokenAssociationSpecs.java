@@ -59,7 +59,7 @@ import static com.hederahashgraph.api.proto.java.TokenType.NON_FUNGIBLE_UNIQUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -124,7 +124,7 @@ public class TokenAssociationSpecs extends HapiSuite {
         return true;
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec handlesUseOfDefaultTokenId() {
         return defaultHapiSpec("HandlesUseOfDefaultTokenId")
                 .given()
@@ -132,7 +132,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                 .then(tokenAssociate(DEFAULT_PAYER, "0.0.0").hasKnownStatus(INVALID_TOKEN_ID));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec associatedContractsMustHaveAdminKeys() {
         String misc = "someToken";
         String contract = "defaultContract";
@@ -143,7 +143,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                 .then(tokenAssociate(contract, misc).hasKnownStatus(INVALID_SIGNATURE));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec contractInfoQueriesAsExpected() {
         final var contract = "contract";
         return defaultHapiSpec("ContractInfoQueriesAsExpected")
@@ -171,7 +171,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec accountInfoQueriesAsExpected() {
         final var account = "account";
         return defaultHapiSpec("accountInfoQueriesAsExpected")
@@ -199,7 +199,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec expiredAndDeletedTokensStillAppearInContractInfo() {
         final String contract = "Fuse";
         final String treasury = "something";
@@ -244,7 +244,7 @@ public class TokenAssociationSpecs extends HapiSuite {
     }
 
     // Enable when token expiration is implemented
-    // @HapiTest
+    // @HapiTests
     public HapiSpec dissociationFromExpiredTokensAsExpected() {
         final String treasury = "accountA";
         final String frozenAccount = "frozen";
@@ -327,7 +327,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                         tokenDissociate(frozenAccount, expiringToken).hasKnownStatus(ACCOUNT_FROZEN_FOR_TOKEN));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec canDissociateFromDeletedTokenWithAlreadyDissociatedTreasury() {
         final String aNonTreasuryAcquaintance = "aNonTreasuryAcquaintance";
         final String bNonTreasuryAcquaintance = "bNonTreasuryAcquaintance";
@@ -443,7 +443,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                         getAccountInfo(TOKEN_TREASURY).hasOwnedNfts(0));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec dissociateHasExpectedSemantics() {
         return defaultHapiSpec("DissociateHasExpectedSemantics")
                 .given(basicKeysAndTokens())
@@ -467,7 +467,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec dissociateHasExpectedSemanticsForDissociatedContracts() {
         final var uniqToken = "UniqToken";
         final var contract = "Fuse";
@@ -493,7 +493,7 @@ public class TokenAssociationSpecs extends HapiSuite {
                         .hasKnownStatus(TOKEN_NOT_ASSOCIATED_TO_ACCOUNT));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec treasuryAssociationIsAutomatic() {
         return defaultHapiSpec("TreasuryAssociationIsAutomatic")
                 .given(basicKeysAndTokens())

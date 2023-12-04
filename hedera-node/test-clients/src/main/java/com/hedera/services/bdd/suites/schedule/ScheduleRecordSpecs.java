@@ -52,7 +52,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INSUFFICIENT_T
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TRANSACTION_ID_FIELD_NOT_ALLOWED;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecSetup;
@@ -269,7 +269,7 @@ public class ScheduleRecordSpecs extends HapiSuite {
         return txnId.toBuilder().setScheduled(true).build();
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec schedulingTxnIdFieldsNotAllowed() {
         return defaultHapiSpec("SchedulingTxnIdFieldsNotAllowed")
                 .given(usableTxnIdNamed("withScheduled").settingScheduledInappropriately())
@@ -277,7 +277,7 @@ public class ScheduleRecordSpecs extends HapiSuite {
                 .then(cryptoCreate("nope").txnId("withScheduled").hasPrecheck(TRANSACTION_ID_FIELD_NOT_ALLOWED));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec executionTimeIsAvailable() {
         return defaultHapiSpec("ExecutionTimeIsAvailable")
                 .given(
@@ -296,7 +296,7 @@ public class ScheduleRecordSpecs extends HapiSuite {
                 .then(getScheduleInfo("tb").logged().wasExecutedBy(TRIGGER));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec deletionTimeIsAvailable() {
         return defaultHapiSpec("DeletionTimeIsAvailable")
                 .given(
@@ -316,7 +316,7 @@ public class ScheduleRecordSpecs extends HapiSuite {
                 .then(getScheduleInfo("ntb").wasDeletedAtConsensusTimeOf("deletion"));
     }
 
-    @HapiTest
+    @HapiTests
     public HapiSpec allRecordsAreQueryable() {
         return defaultHapiSpec("AllRecordsAreQueryable")
                 .given(

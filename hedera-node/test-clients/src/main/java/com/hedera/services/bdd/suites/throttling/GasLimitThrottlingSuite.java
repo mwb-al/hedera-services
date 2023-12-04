@@ -29,7 +29,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.MAX_GAS_LIMIT_
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.OK;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.utilops.UtilVerbs;
@@ -59,7 +59,7 @@ public class GasLimitThrottlingSuite extends HapiSuite {
         new GasLimitThrottlingSuite().runSuiteSync();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec txsUnderGasLimitAllowed() {
         final var NUM_CALLS = 10;
         final Map<String, String> startingProps = new HashMap<>();
@@ -97,7 +97,7 @@ public class GasLimitThrottlingSuite extends HapiSuite {
                         overridingAllOfDeferred(() -> startingProps));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec txOverGasLimitThrottled() {
         final Map<String, String> startingProps = new HashMap<>();
         final var MAX_GAS_PER_SECOND = 1_000_001L;

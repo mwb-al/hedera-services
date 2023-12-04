@@ -110,7 +110,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.UNRESOLVABLE_R
 import com.google.protobuf.ByteString;
 import com.hedera.hapi.node.base.HederaFunctionality;
 import com.hedera.node.config.data.ConsensusConfig;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -340,7 +340,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(0));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledMintWithInvalidTokenThrowsUnresolvableSigners() {
         return defaultHapiSpec("ScheduledMintWithInvalidTokenThrowsUnresolvableSigners")
                 .given(overriding(SCHEDULING_WHITELIST, WHITELIST_MINIMUM), cryptoCreate(SCHEDULE_PAYER))
@@ -353,7 +353,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledUniqueBurnFailsWithInvalidBatchSize() {
         return defaultHapiSpec("ScheduledUniqueBurnFailsWithInvalidBatchSize")
                 .given(
@@ -386,7 +386,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(1));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledUniqueBurnExecutesProperly() {
         return defaultHapiSpec("ScheduledUniqueBurnExecutesProperly")
                 .given(
@@ -462,7 +462,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(0));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledUniqueMintFailsWithInvalidMetadata() {
         return defaultHapiSpec("ScheduledUniqueMintFailsWithInvalidMetadata")
                 .given(
@@ -490,7 +490,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(0));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledUniqueBurnFailsWithInvalidNftId() {
         return defaultHapiSpec("ScheduledUniqueBurnFailsWithInvalidNftId")
                 .given(
@@ -514,7 +514,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         .hasPriority(recordWith().status(INVALID_NFT_ID)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledBurnForUniqueSucceedsWithExistingAmount() {
         return defaultHapiSpec("scheduledBurnForUniqueSucceedsWithExistingAmount")
                 .given(
@@ -577,7 +577,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
         return contents;
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledUniqueMintFailsWithInvalidBatchSize() {
         return defaultHapiSpec("ScheduledUniqueMintFailsWithInvalidBatchSize")
                 .given(
@@ -645,7 +645,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(101));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledUniqueMintExecutesProperly() {
         return defaultHapiSpec("ScheduledUniqueMintExecutesProperly")
                 .given(
@@ -724,7 +724,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(2));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledMintExecutesProperly() {
         return defaultHapiSpec("ScheduledMintExecutesProperly")
                 .given(
@@ -796,7 +796,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(111));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledBurnExecutesProperly() {
         return defaultHapiSpec("ScheduledBurnExecutesProperly")
                 .given(
@@ -869,7 +869,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTokenInfo(A_TOKEN).hasTotalSupply(91));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledXferFailingWithDeletedAccountPaysServiceFeeButNoImpact() {
         final String xToken = "XXX";
         final String validSchedule = "withLiveAccount";
@@ -920,7 +920,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 assertBasicallyIdentical(successFeesObs.get(), failureFeesObs.get(), 1.0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledXferFailingWithDeletedTokenPaysServiceFeeButNoImpact() {
         String xToken = "XXX";
         String validSchedule = "withLiveToken";
@@ -974,7 +974,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 assertBasicallyIdentical(successFeesObs.get(), failureFeesObs.get(), 1.0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledXferFailingWithFrozenAccountTransferPaysServiceFeeButNoImpact() {
         String xToken = "XXX";
         String validSchedule = "withUnfrozenAccount";
@@ -1030,7 +1030,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 assertBasicallyIdentical(successFeesObs.get(), failureFeesObs.get(), 1.0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledXferFailingWithNonKycedAccountTransferPaysServiceFeeButNoImpact() {
         String xToken = "XXX";
         String validSchedule = "withKycedToken";
@@ -1085,7 +1085,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 assertBasicallyIdentical(successFeesObs.get(), failureFeesObs.get(), 1.0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledXferFailingWithUnassociatedAccountTransferPaysServiceFeeButNoImpact() {
         String xToken = "XXX";
         String validSchedule = "withAssociatedToken";
@@ -1305,7 +1305,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 assertBasicallyIdentical(successFeesObs.get(), failureFeesObs.get(), 1.0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledSubmitFailedWithMsgSizeTooLargeStillPaysServiceFeeButHasNoImpact() {
         String immutableTopic = "XXX";
         String validSchedule = "withValidSize";
@@ -1347,7 +1347,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 assertBasicallyIdentical(successFeesObs.get(), failureFeesObs.get(), 1.0)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledSubmitFailedWithInvalidChunkTxnIdStillPaysServiceFeeButHasNoImpact() {
         String immutableTopic = "XXX";
         String validSchedule = "withValidChunkTxnId";
@@ -1400,7 +1400,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 (spec, opLog) -> Assertions.assertEquals(successFeesObs.get(), failureFeesObs.get())));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledSubmitFailedWithInvalidChunkNumberStillPaysServiceFeeButHasNoImpact() {
         String immutableTopic = "XXX";
         String validSchedule = "withValidChunkNumber";
@@ -1448,7 +1448,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                                 (spec, opLog) -> Assertions.assertEquals(successFeesObs.get(), failureFeesObs.get())));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledSubmitThatWouldFailWithInvalidTopicIdCannotBeScheduled() {
         String civilianPayer = PAYER;
         AtomicReference<Map<AccountID, Long>> successFeesObs = new AtomicReference<>();
@@ -1513,7 +1513,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         .hasKnownStatus(UNRESOLVABLE_REQUIRED_SIGNERS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec executionTriggersOnceTopicHasSatisfiedSubmitKey() {
         String adminKey = ADMIN;
         String submitKey = "submit";
@@ -1551,7 +1551,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         getTopicInfo(mutableTopic).hasSeqNo(1L));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec executionTriggersWithWeirdlyRepeatedKey() {
         String schedule = "dupKeyXfer";
 
@@ -1815,7 +1815,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec executionWithCryptoInsufficientAccountBalanceFails() {
         long noBalance = 0L;
         long senderBalance = 100L;
@@ -1849,7 +1849,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec executionWithCryptoSenderDeletedFails() {
         long noBalance = 0L;
         long senderBalance = 100L;
@@ -1885,7 +1885,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec executionWithTokenInsufficientAccountBalanceFails() {
         String xToken = "XXX";
         String invalidSchedule = "withInsufficientTokenTransfer";
@@ -2396,7 +2396,7 @@ public class ScheduleExecutionSpecs extends HapiSuite {
                         }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec scheduledSystemDeleteUnauthorizedPayerFails(boolean isLongTermEnabled) {
 
         if (isLongTermEnabled) {

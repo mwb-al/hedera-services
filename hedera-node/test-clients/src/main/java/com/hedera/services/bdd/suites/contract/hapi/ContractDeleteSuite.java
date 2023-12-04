@@ -60,7 +60,7 @@ import static com.hederahashgraph.api.proto.java.TokenType.FUNGIBLE_COMMON;
 import static com.hederahashgraph.api.proto.java.TokenType.NON_FUNGIBLE_UNIQUE;
 
 import com.google.protobuf.ByteString;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiPropertySource;
 import com.hedera.services.bdd.spec.HapiSpec;
@@ -111,7 +111,7 @@ public class ContractDeleteSuite extends HapiSuite {
                 cannotUseMoreThanChildContractLimit());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec cannotUseMoreThanChildContractLimit() {
         final var illegalNumChildren =
                 HapiSpecSetup.getDefaultNodeProps().getInteger("consensus.handle.maxFollowingRecords") + 1;
@@ -160,7 +160,7 @@ public class ContractDeleteSuite extends HapiSuite {
                                 .hasChildRecords());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec cannotSendValueToTokenAccount() {
         final var multiKey = "multiKey";
         final var nonFungibleToken = "NFT";
@@ -200,7 +200,7 @@ public class ContractDeleteSuite extends HapiSuite {
                         getTxnRecord(externalViolation).hasPriority(recordWith().feeGreaterThan(0L)));
     }
 
-    @HapiTest
+    @HapiTests
     HapiSpec cannotDeleteOrSelfDestructTokenTreasury() {
         final var someToken = "someToken";
         final var selfDestructCallable = "SelfDestructCallable";
@@ -233,7 +233,7 @@ public class ContractDeleteSuite extends HapiSuite {
                 .then(contractCall(selfDestructCallable + "2", CONTRACT_DESTROY).payingWith(beneficiary));
     }
 
-    @HapiTest
+    @HapiTests
     HapiSpec cannotDeleteOrSelfDestructContractWithNonZeroBalance() {
         final var someToken = "someToken";
         final var multiKey = "multi";
@@ -270,7 +270,7 @@ public class ContractDeleteSuite extends HapiSuite {
                                 .payingWith(beneficiary));
     }
 
-    @HapiTest
+    @HapiTests
     HapiSpec rejectsWithoutProperSig() {
         return defaultHapiSpec("rejectsWithoutProperSig")
                 .given(uploadInitCode(CONTRACT), contractCreate(CONTRACT))
@@ -278,7 +278,7 @@ public class ContractDeleteSuite extends HapiSuite {
                 .then(contractDelete(CONTRACT).signedBy(GENESIS).hasKnownStatus(INVALID_SIGNATURE));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemCannotDeleteOrUndeleteContracts() {
         return defaultHapiSpec("SystemCannotDeleteOrUndeleteContracts")
                 .given(uploadInitCode(CONTRACT), contractCreate(CONTRACT))
@@ -293,7 +293,7 @@ public class ContractDeleteSuite extends HapiSuite {
                         getContractInfo(CONTRACT).hasAnswerOnlyPrecheck(OK));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec deleteWorksWithMutableContract() {
         final var tbdFile = "FTBD";
         final var tbdContract = "CTBD";
@@ -311,7 +311,7 @@ public class ContractDeleteSuite extends HapiSuite {
                         getContractInfo(CONTRACT).has(contractWith().isDeleted()));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec deleteFailsWithImmutableContract() {
         return defaultHapiSpec("DeleteFailsWithImmutableContract")
                 .given(uploadInitCode(CONTRACT), contractCreate(CONTRACT).omitAdminKey())
@@ -319,7 +319,7 @@ public class ContractDeleteSuite extends HapiSuite {
                 .then(contractDelete(CONTRACT).hasKnownStatus(MODIFYING_IMMUTABLE_CONTRACT));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec deleteTransfersToAccount() {
         return defaultHapiSpec("DeleteTransfersToAccount")
                 .given(
@@ -330,7 +330,7 @@ public class ContractDeleteSuite extends HapiSuite {
                 .then(getAccountBalance(RECEIVER_CONTRACT_NAME).hasTinyBars(1L));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec deleteTransfersToContract() {
         final var suffix = "Receiver";
 

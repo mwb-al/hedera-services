@@ -79,7 +79,7 @@ import com.esaulpaugh.headlong.abi.Tuple;
 import com.google.protobuf.ByteString;
 import com.hedera.node.app.hapi.utils.ByteStringUtils;
 import com.hedera.node.app.hapi.utils.contracts.ParsingConstants.FunctionType;
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.assertions.NonFungibleTransfers;
@@ -168,7 +168,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                 hapiTransferFromForFungibleTokenWithCustomFeesWithBothApproveForAllAndAssignedSpender());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForFungibleToken() {
         final var allowance = 10L;
         final var successfulTransferFromTxn = "txn";
@@ -351,7 +351,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                                         .withStatus(SPENDER_DOES_NOT_HAVE_ALLOWANCE)))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForFungibleTokenToSystemAccountsFails() {
         final var UPPER_BOUND_SYSTEM_ADDRESS = 750L;
         final var ADDRESS_ONE = 1L;
@@ -452,7 +452,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                 recordWith().status(INVALID_RECEIVING_NODE_ACCOUNT)));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForNFT() {
         final var successfulTransferFromTxn = "txn";
         final var revertingTransferFromTxn = "revertWhenMoreThanAllowance";
@@ -552,7 +552,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                         }));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec repeatedTokenIdsAreAutomaticallyConsolidated() {
         final var repeatedIdsPrecompileXferTxn = "repeatedIdsPrecompileXfer";
         final var senderStartBalance = 200L;
@@ -632,7 +632,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                                 .including(FUNGIBLE_TOKEN, RECEIVER, 2 * toSendEachTuple))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nonNestedCryptoTransferForFungibleTokenWithMultipleReceivers() {
         final var cryptoTransferTxn = CRYPTO_TRANSFER_TXN;
 
@@ -705,7 +705,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                                 .including(FUNGIBLE_TOKEN, RECEIVER2, 20))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nonNestedCryptoTransferForNonFungibleToken() {
         final var cryptoTransferTxn = CRYPTO_TRANSFER_TXN;
 
@@ -775,7 +775,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                                 .including(NFT_TOKEN, SENDER, RECEIVER, 1L))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nonNestedCryptoTransferForMultipleNonFungibleTokens() {
         final var cryptoTransferTxn = CRYPTO_TRANSFER_TXN;
 
@@ -862,7 +862,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                                 .including(NFT_TOKEN, SENDER2, RECEIVER2, 2L))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nonNestedCryptoTransferForFungibleAndNonFungibleToken() {
         final var cryptoTransferTxn = CRYPTO_TRANSFER_TXN;
 
@@ -969,7 +969,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                                 .including(NFT_TOKEN, SENDER2, RECEIVER2, 1L))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec nonNestedCryptoTransferForFungibleTokenWithMultipleSendersAndReceiversAndNonFungibleTokens() {
         final var cryptoTransferTxn = CRYPTO_TRANSFER_TXN;
 
@@ -1093,7 +1093,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                                                 .including(NFT_TOKEN, SENDER2, RECEIVER2, 2L))));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForNFTWithCustomFeesWithoutApproveFails() {
         return defaultHapiSpec(
                         "HapiTransferFromForNFTWithCustomFeesWithoutApproveFails",
@@ -1240,7 +1240,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForFungibleTokenWithCustomFeesWithoutApproveFails() {
         final var FUNGIBLE_TOKEN_WITH_FIXED_HBAR_FEE = "fungibleTokenWithFixedHbarFee";
         final var FUNGIBLE_TOKEN_WITH_FIXED_TOKEN_FEE = "fungibleTokenWithFixedTokenFee";
@@ -1340,7 +1340,7 @@ public class CryptoTransferHTSSuite extends HapiSuite {
                 .then();
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec hapiTransferFromForFungibleTokenWithCustomFeesWithBothApproveForAllAndAssignedSpender() {
         final var FUNGIBLE_TOKEN_WITH_FIXED_HBAR_FEE = "fungibleTokenWithFixedHbarFee";
         final var FUNGIBLE_TOKEN_WITH_FIXED_TOKEN_FEE = "fungibleTokenWithFixedTokenFee";

@@ -27,7 +27,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.inParallel;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.newKeyNamed;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.ENTITY_NOT_ALLOWED_TO_DELETE;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.HapiSpecOperation;
@@ -76,7 +76,7 @@ public class CannotDeleteSystemEntitiesSuite extends HapiSuite {
         });
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec ensureSystemAccountsHaveSomeFunds() {
         return defaultHapiSpec("EnsureSystemAccountsHaveSomeFunds")
                 .given()
@@ -88,77 +88,77 @@ public class CannotDeleteSystemEntitiesSuite extends HapiSuite {
                                 .payingWith(GENESIS));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec genesisCannotDeleteSystemAccountsFrom1To100() {
         return systemUserCannotDeleteSystemAccounts(1, 100, GENESIS);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec genesisCannotDeleteSystemAccountsFrom700To750() {
         return systemUserCannotDeleteSystemAccounts(700, 750, GENESIS);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemAdminCannotDeleteSystemAccountsFrom1To100() {
         return systemUserCannotDeleteSystemAccounts(1, 100, SYSTEM_ADMIN);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemAdminCannotDeleteSystemAccountsFrom700To750() {
         return systemUserCannotDeleteSystemAccounts(700, 750, SYSTEM_ADMIN);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemDeleteAdminCannotDeleteSystemAccountsFrom1To100() {
         return systemUserCannotDeleteSystemAccounts(1, 100, SYSTEM_DELETE_ADMIN);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemDeleteAdminCannotDeleteSystemAccountsFrom700To750() {
         return systemUserCannotDeleteSystemAccounts(700, 750, SYSTEM_DELETE_ADMIN);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec normalUserCannotDeleteSystemAccountsFrom1To100() {
         return normalUserCannotDeleteSystemAccounts(1, 100);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec normalUserCannotDeleteSystemAccountsFrom700To750() {
         return normalUserCannotDeleteSystemAccounts(700, 750);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec genesisCannotDeleteSystemFileIds() {
         return systemUserCannotDeleteSystemFiles(sysFileIds, GENESIS);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemAdminCannotDeleteSystemFileIds() {
         return systemUserCannotDeleteSystemFiles(sysFileIds, SYSTEM_ADMIN);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemDeleteAdminCannotDeleteSystemFileIds() {
         return systemUserCannotDeleteSystemFiles(sysFileIds, SYSTEM_DELETE_ADMIN);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec normalUserCannotDeleteSystemFileIds() {
         return normalUserCannotDeleteSystemFiles(sysFileIds);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec genesisCannotSystemFileDeleteFileIds() {
         return systemDeleteCannotDeleteSystemFiles(sysFileIds, GENESIS);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemAdminCannotSystemFileDeleteFileIds() {
         return systemDeleteCannotDeleteSystemFiles(sysFileIds, SYSTEM_ADMIN);
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec systemDeleteAdminCannotSystemFileDeleteFileIds() {
         return systemDeleteCannotDeleteSystemFiles(sysFileIds, SYSTEM_DELETE_ADMIN);
     }

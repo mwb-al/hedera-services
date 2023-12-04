@@ -35,7 +35,7 @@ import static com.hedera.services.bdd.spec.utilops.UtilVerbs.withOpContext;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.hedera.services.bdd.junit.HapiTest;
+import com.hedera.services.bdd.junit.HapiTests;
 import com.hedera.services.bdd.junit.HapiTestSuite;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.suites.HapiSuite;
@@ -87,7 +87,7 @@ public class PrngSeedOperationSuite extends HapiSuite {
                 prngPrecompileHappyPathWorks(), multipleCallsHaveIndependentResults(), prngPrecompileDisabledInV030());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec multipleCallsHaveIndependentResults() {
         final var prng = THE_PRNG_CONTRACT;
         final var gasToOffer = 400_000;
@@ -136,7 +136,7 @@ public class PrngSeedOperationSuite extends HapiSuite {
                         contractCallLocal(prng, GET_SEED).gas(gasToOffer));
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec prngPrecompileHappyPathWorks() {
         final var prng = THE_PRNG_CONTRACT;
         final var randomBits = "randomBits";
@@ -160,7 +160,7 @@ public class PrngSeedOperationSuite extends HapiSuite {
                         .logged());
     }
 
-    @HapiTest
+    @HapiTests
     private HapiSpec prngPrecompileDisabledInV030() {
         final var prng = THE_PRNG_CONTRACT;
         final var randomBits = "randomBits";
