@@ -69,6 +69,7 @@ public final class Signing {
                 ethTx.maxGas(),
                 ethTx.gasLimit(),
                 ethTx.to(),
+                ethTx.to(),
                 ethTx.value(),
                 ethTx.callData(),
                 ethTx.accessList(),

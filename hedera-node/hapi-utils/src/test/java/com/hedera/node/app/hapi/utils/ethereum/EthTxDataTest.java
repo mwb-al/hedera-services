@@ -424,6 +424,7 @@ class EthTxDataTest {
                 oneByte,
                 1,
                 oneByte,
+                oneByte,
                 null,
                 BigInteger.ONE,
                 oneByte,
@@ -444,6 +445,7 @@ class EthTxDataTest {
                 oneByte,
                 oneByte,
                 1,
+                oneByte,
                 oneByte,
                 BigInteger.ONE,
                 oneByte,
@@ -509,6 +511,7 @@ class EthTxDataTest {
                 oneByte,
                 oneByte,
                 1,
+                oneByte,
                 oneByte,
                 WEIBARS_IN_A_TINYBAR,
                 oneByte,
@@ -688,6 +691,7 @@ class EthTxDataTest {
                         gasPrice,
                         1,
                         oneByte,
+                        oneByte,
                         BigInteger.ONE,
                         oneByte,
                         oneByte,
@@ -718,6 +722,7 @@ class EthTxDataTest {
                 smallGasPrice,
                 1,
                 oneByte,
+                oneByte,
                 BigInteger.ONE,
                 oneByte,
                 oneByte,
@@ -741,7 +746,7 @@ class EthTxDataTest {
 
         final var oneByte = new byte[] {1};
         final EthTxData ethTxData = new EthTxData(
-                oneByte, type, oneByte, 1, oneByte, oneByte, oneByte, 1, oneByte, bigValue, oneByte, null, null, 1,
+                oneByte, type, oneByte, 1, oneByte, oneByte, oneByte, 1, oneByte, oneByte, bigValue, oneByte, null, null, 1,
                 oneByte, oneByte, oneByte);
         final var encoded = ethTxData.encodeTx();
 

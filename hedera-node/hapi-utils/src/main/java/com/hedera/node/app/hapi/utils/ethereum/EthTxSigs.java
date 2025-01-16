@@ -16,6 +16,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+
+import com.swirlds.common.utility.CommonUtils;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
@@ -23,6 +25,7 @@ import org.hyperledger.besu.nativelib.secp256k1.LibSecp256k1;
 
 public record EthTxSigs(byte[] publicKey, byte[] address) {
     private static final BigInteger N = SECNamedCurves.getByName("secp256k1").getN();
+    private static final byte[] ENTITY_NUM_ALIAS_0 = new byte[20];
 
     public static EthTxSigs extractSignatures(EthTxData ethTx) {
         final var message = calculateSignableMessage(ethTx);

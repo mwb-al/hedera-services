@@ -277,6 +277,7 @@ public class HapiEthereumContractCreate extends HapiBaseContractCreate<HapiEther
                 maxFeePerGasBytes,
                 gas.orElse(0L),
                 new byte[] {},
+                new byte[] {},
                 weibarsToTinybars(balance).orElse(BigInteger.ZERO),
                 callData,
                 new byte[] {},

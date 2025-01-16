@@ -98,10 +98,6 @@ public class EthereumTransactionHandler extends AbstractContractTransactionHandl
             final var intrinsicGas =
                     gasCalculator.transactionIntrinsicGasCost(org.apache.tuweni.bytes.Bytes.wrap(callData), false);
             validateTruePreCheck(ethTxData.gasLimit() >= intrinsicGas, INSUFFICIENT_GAS);
-            // sanity check evm address if there is one
-            if (ethTxData.hasToAddress()) {
-                validateTruePreCheck(ethTxData.to().length == EVM_ADDRESS_LENGTH_AS_INT, INVALID_CONTRACT_ID);
-            }
         } catch (@NonNull final Exception e) {
             bumpExceptionMetrics(ETHEREUM_TRANSACTION, e);
             if (e instanceof NullPointerException) {
