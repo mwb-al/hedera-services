@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-package com.hedera.services.bdd.suites.contract.hapi;
+package com.hedera.services.bdd.suites.contract.hapi.batch;
 
 import static com.hedera.services.bdd.junit.TestTags.SMART_CONTRACT;
 import static com.hedera.services.bdd.spec.HapiSpec.hapiTest;
@@ -26,33 +26,24 @@ import static com.hedera.services.bdd.spec.queries.QueryVerbs.getAccountInfo;
 import static com.hedera.services.bdd.spec.queries.QueryVerbs.getContractInfo;
 import static com.hedera.services.bdd.spec.queries.QueryVerbs.getTxnRecord;
 import static com.hedera.services.bdd.spec.transactions.TxnUtils.bytecodePath;
+import static com.hedera.services.bdd.spec.transactions.TxnVerbs.atomicBatch;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.contractCall;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.contractCreate;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.cryptoCreate;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.cryptoTransfer;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.cryptoUpdate;
-import static com.hedera.services.bdd.spec.transactions.TxnVerbs.ethereumCall;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.explicitContractCreate;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.explicitEthereumTransaction;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.fileCreate;
-import static com.hedera.services.bdd.spec.transactions.TxnVerbs.tokenCreate;
 import static com.hedera.services.bdd.spec.transactions.TxnVerbs.uploadInitCode;
-import static com.hedera.services.bdd.spec.transactions.crypto.HapiCryptoTransfer.tinyBarsFromAccountToAlias;
-import static com.hedera.services.bdd.spec.transactions.crypto.HapiCryptoTransfer.tinyBarsFromTo;
-import static com.hedera.services.bdd.spec.transactions.token.TokenMovement.moving;
 import static com.hedera.services.bdd.spec.utilops.CustomSpecAssert.allRunFor;
-import static com.hedera.services.bdd.spec.utilops.UtilVerbs.assertCreationMaxAssociations;
-import static com.hedera.services.bdd.spec.utilops.UtilVerbs.assertCreationViaCallMaxAssociations;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.contractListWithPropertiesInheritedFrom;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.getEcdsaPrivateKeyFromSpec;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.newKeyListNamed;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.newKeyNamed;
-import static com.hedera.services.bdd.spec.utilops.UtilVerbs.overriding;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.sleepFor;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.sourcing;
-import static com.hedera.services.bdd.spec.utilops.UtilVerbs.submitModified;
 import static com.hedera.services.bdd.spec.utilops.UtilVerbs.withOpContext;
-import static com.hedera.services.bdd.spec.utilops.mod.ModificationUtils.withSuccessivelyVariedBodyIds;
 import static com.hedera.services.bdd.suites.HapiSuite.CHAIN_ID;
 import static com.hedera.services.bdd.suites.HapiSuite.DEFAULT_PAYER;
 import static com.hedera.services.bdd.suites.HapiSuite.FUNDING;
@@ -62,7 +53,6 @@ import static com.hedera.services.bdd.suites.HapiSuite.ONE_MILLION_HBARS;
 import static com.hedera.services.bdd.suites.HapiSuite.RELAYER;
 import static com.hedera.services.bdd.suites.HapiSuite.SECP_256K1_SHAPE;
 import static com.hedera.services.bdd.suites.HapiSuite.SECP_256K1_SOURCE_KEY;
-import static com.hedera.services.bdd.suites.HapiSuite.TOKEN_TREASURY;
 import static com.hedera.services.bdd.suites.HapiSuite.ZERO_BYTE_MEMO;
 import static com.hedera.services.bdd.suites.contract.Utils.FunctionType.FUNCTION;
 import static com.hedera.services.bdd.suites.contract.Utils.asSolidityAddress;
@@ -72,9 +62,9 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.BUSY;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.CONTRACT_BYTECODE_EMPTY;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.CONTRACT_REVERT_EXECUTED;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.ERROR_DECODING_BYTESTRING;
+import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INNER_TRANSACTION_FAILED;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INSUFFICIENT_GAS;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INSUFFICIENT_PAYER_BALANCE;
-import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INSUFFICIENT_TX_FEE;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_FILE_ID;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_MAX_AUTO_ASSOCIATIONS;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_SIGNATURE;
@@ -82,7 +72,6 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_STAKIN
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_ZERO_BYTE_IN_STRING;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.MEMO_TOO_LONG;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
-import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.TRANSACTION_OVERSIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -93,7 +82,9 @@ import com.google.common.primitives.Longs;
 import com.google.protobuf.ByteString;
 import com.hedera.node.app.hapi.utils.ethereum.EthTxData;
 import com.hedera.services.bdd.junit.HapiTest;
-import com.hedera.services.bdd.junit.LeakyHapiTest;
+import com.hedera.services.bdd.junit.HapiTestLifecycle;
+import com.hedera.services.bdd.junit.OrderedInIsolation;
+import com.hedera.services.bdd.junit.support.TestLifecycle;
 import com.hedera.services.bdd.spec.HapiSpec;
 import com.hedera.services.bdd.spec.assertions.ContractInfoAsserts;
 import com.hedera.services.bdd.spec.keys.KeyShape;
@@ -108,6 +99,7 @@ import com.hederahashgraph.api.proto.java.Key;
 import com.hederahashgraph.api.proto.java.ResponseCodeEnum;
 import com.hederahashgraph.api.proto.java.Timestamp;
 import com.hederahashgraph.api.proto.java.TransactionRecord;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigInteger;
@@ -115,26 +107,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tuweni.bytes.Bytes32;
 import org.hiero.base.utility.CommonUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 
+// This test cases are direct copies of ContractCreateSuite. The difference here is that
+// we are wrapping the operations in an atomic batch to confirm that everything works as expected.
+@HapiTestLifecycle
 @Tag(SMART_CONTRACT)
+@OrderedInIsolation
 @SuppressWarnings("java:S1192") // "string literal should not be duplicated" - this rule makes test suites worse
-public class ContractCreateSuite {
+public class AtomicContractCreateSuite {
 
     public static final String EMPTY_CONSTRUCTOR_CONTRACT = "EmptyConstructor";
     public static final String PARENT_INFO = "parentInfo";
     private static final String PAYER = "payer";
 
-    private static final Logger log = LogManager.getLogger(ContractCreateSuite.class);
+    private static final Logger log = LogManager.getLogger(AtomicContractCreateSuite.class);
 
     // The following constants are referenced from -
     // https://github.com/Arachnid/deterministic-deployment-proxy?tab=readme-ov-file#deployment-transaction
@@ -143,26 +139,18 @@ public class ContractCreateSuite {
             "f8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222";
     private static final String EXPECTED_DEPLOYER_ADDRESS = "4e59b44847b379578588920ca78fbf26c0b4956c";
     private static final String DEPLOYER = "DeployerContract";
-    private static final String FUNGIBLE_TOKEN = "fungible";
-    private static final String MULTI_KEY = "multiKey";
+    private static final String BATCH_OPERATOR = "batchOperator";
 
-    @HapiTest
-    final Stream<DynamicTest> createDeterministicDeployer() {
-        final var creatorAddress = ByteString.copyFrom(Objects.requireNonNull(CommonUtils.unhex(DEPLOYMENT_SIGNER)));
-        final var transaction = ByteString.copyFrom(Objects.requireNonNull(CommonUtils.unhex(DEPLOYMENT_TRANSACTION)));
-        final var systemFileId = FileID.newBuilder().setFileNum(159).build();
-
-        return hapiTest(
-                newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
-                cryptoCreate(PAYER).balance(6 * ONE_MILLION_HBARS),
-                cryptoCreate(RELAYER).balance(6 * ONE_MILLION_HBARS),
-                cryptoTransfer(tinyBarsFromTo(PAYER, creatorAddress, ONE_HUNDRED_HBARS)),
-                explicitEthereumTransaction(DEPLOYER, (spec, b) -> b.setCallData(systemFileId)
-                                .setEthereumData(transaction))
-                        .payingWith(PAYER),
-                getContractInfo(DEPLOYER)
-                        .has(contractWith().addressOrAlias(EXPECTED_DEPLOYER_ADDRESS))
-                        .logged());
+    @BeforeAll
+    static void beforeAll(@NonNull final TestLifecycle testLifecycle) {
+        testLifecycle.overrideInClass(Map.of(
+                "atomicBatch.isEnabled",
+                "true",
+                "atomicBatch.maxNumberOfTransactions",
+                "50",
+                "contracts.throttle.throttleByGas",
+                "false"));
+        testLifecycle.doAdhoc(cryptoCreate(BATCH_OPERATOR).balance(ONE_MILLION_HBARS));
     }
 
     @HapiTest
@@ -171,42 +159,50 @@ public class ContractCreateSuite {
         return hapiTest(
                 uploadInitCode(contract),
                 // refuse eth conversion because ethereum transaction is missing staking fields to map
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .declinedReward(true)
-                        .stakedNodeId(0)
-                        .refusingEthConversion(),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .declinedReward(true)
+                                .stakedNodeId(0)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract)
                         .has(contractWith()
                                 .isDeclinedReward(true)
                                 .noStakedAccountId()
                                 .stakedNodeId(0)),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .declinedReward(true)
-                        .stakedAccountId("10")
-                        .refusingEthConversion(),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .declinedReward(true)
+                                .stakedAccountId("10")
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract)
                         .has(contractWith()
                                 .isDeclinedReward(true)
                                 .noStakingNodeId()
                                 .stakedAccountId("10")),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .declinedReward(false)
-                        .stakedNodeId(0)
-                        .refusingEthConversion(),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .declinedReward(false)
+                                .stakedNodeId(0)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract)
                         .has(contractWith()
                                 .isDeclinedReward(false)
                                 .noStakedAccountId()
                                 .stakedNodeId(0))
                         .logged(),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .declinedReward(false)
-                        .stakedAccountId("10")
-                        .refusingEthConversion(),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .declinedReward(false)
+                                .stakedAccountId("10")
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract)
                         .has(contractWith()
                                 .isDeclinedReward(false)
@@ -214,18 +210,24 @@ public class ContractCreateSuite {
                                 .stakedAccountId("10"))
                         .logged(),
                 /* sentinel values throw */
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .declinedReward(false)
-                        .stakedAccountId("0.0.0")
-                        .hasPrecheck(INVALID_STAKING_ID)
-                        .refusingEthConversion(),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .declinedReward(false)
-                        .stakedNodeId(-1L)
-                        .hasPrecheck(INVALID_STAKING_ID)
-                        .refusingEthConversion());
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .declinedReward(false)
+                                .stakedAccountId("0.0.0")
+                                .hasPrecheck(INVALID_STAKING_ID)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .declinedReward(false)
+                                .stakedNodeId(-1L)
+                                .hasPrecheck(INVALID_STAKING_ID)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED));
     }
 
     @HapiTest
@@ -233,9 +235,12 @@ public class ContractCreateSuite {
         return hapiTest(
                 cryptoCreate("bankrupt").balance(0L),
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .payingWith("bankrupt")
-                        .hasPrecheck(INSUFFICIENT_PAYER_BALANCE));
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .payingWith("bankrupt")
+                                .hasPrecheck(INSUFFICIENT_PAYER_BALANCE)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED));
     }
 
     @HapiTest
@@ -245,23 +250,31 @@ public class ContractCreateSuite {
                 newKeyNamed(ADMIN_KEY),
                 // refuse eth conversion because we can't set invalid bytecode to callData in ethereum
                 // transaction
-                contractCreate(contract)
-                        .adminKey(ADMIN_KEY)
-                        .entityMemo("Empty Contract")
-                        .inlineInitCode(ByteString.EMPTY)
-                        .hasKnownStatus(CONTRACT_BYTECODE_EMPTY)
-                        .refusingEthConversion());
+                atomicBatch(contractCreate(contract)
+                                .adminKey(ADMIN_KEY)
+                                .entityMemo("Empty Contract")
+                                .inlineInitCode(ByteString.EMPTY)
+                                .hasKnownStatus(CONTRACT_BYTECODE_EMPTY)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED));
     }
 
     @HapiTest
     final Stream<DynamicTest> cannotSendToNonExistentAccount() {
         final var contract = "Multipurpose";
 
-        return hapiTest(uploadInitCode(contract), contractCreate(contract).balance(666), withOpContext((spec, log) -> {
-            final Object[] donationArgs = {new BigInteger(asSolidityAddress(spec, 666_666L)), "Hey, Ma!"};
-            final var callOp = contractCall(contract, "donate", donationArgs).hasKnownStatus(CONTRACT_REVERT_EXECUTED);
-            allRunFor(spec, callOp);
-        }));
+        return hapiTest(
+                uploadInitCode(contract),
+                atomicBatch(contractCreate(contract).balance(666).batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
+                withOpContext((spec, log) -> {
+                    final Object[] donationArgs = {new BigInteger(asSolidityAddress(spec, 666_666L)), "Hey, Ma!"};
+                    final var callOp =
+                            contractCall(contract, "donate", donationArgs).hasKnownStatus(CONTRACT_REVERT_EXECUTED);
+                    allRunFor(spec, callOp);
+                }));
     }
 
     @HapiTest
@@ -271,11 +284,14 @@ public class ContractCreateSuite {
         return hapiTest(
                 newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                 cryptoCreate(RELAYER).balance(ONE_HUNDRED_HBARS),
-                explicitContractCreate(neverToBe, (spec, b) -> b.setFileID(systemFileId))
-                        // refuse eth conversion because we can't set invalid bytecode to callData in ethereum
-                        // transaction
-                        .hasKnownStatus(INVALID_FILE_ID)
-                        .refusingEthConversion(),
+                atomicBatch(explicitContractCreate(neverToBe, (spec, b) -> b.setFileID(systemFileId))
+                                // refuse eth conversion because we can't set invalid bytecode to callData in ethereum
+                                // transaction
+                                .hasKnownStatus(INVALID_FILE_ID)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
                 explicitEthereumTransaction(neverToBe, (spec, b) -> {
                             final var signedEthTx = Signing.signMessage(
                                     placeholderEthTx(), getEcdsaPrivateKeyFromSpec(spec, SECP_256K1_SOURCE_KEY));
@@ -288,142 +304,21 @@ public class ContractCreateSuite {
     final Stream<DynamicTest> createsVanillaContractAsExpectedWithOmittedAdminKey() {
         return hapiTest(
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT).omitAdminKey(),
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .omitAdminKey()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(EMPTY_CONSTRUCTOR_CONTRACT)
                         .has(contractWith().immutableContractKey(EMPTY_CONSTRUCTOR_CONTRACT))
                         .logged());
     }
 
-    @LeakyHapiTest(overrides = {"ledger.maxAutoAssociations"})
-    final Stream<DynamicTest> contractCreationsHaveValidAssociations() {
-        final var initCreateContract = "ParentChildTransfer";
-        final var slotUserContract = "SlotUser";
-        final var multiPurpose = "Multipurpose";
-        final var createContract = "CreateTrivial";
-        return hapiTest(
-                overriding("ledger.maxAutoAssociations", "5000"),
-                newKeyNamed(MULTI_KEY),
-                newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
-                cryptoTransfer(tinyBarsFromAccountToAlias(GENESIS, SECP_256K1_SOURCE_KEY, ONE_HUNDRED_HBARS)),
-                cryptoCreate(RELAYER).balance(6 * ONE_MILLION_HBARS),
-                cryptoCreate(TOKEN_TREASURY),
-                tokenCreate(FUNGIBLE_TOKEN)
-                        .initialSupply(1000)
-                        .adminKey(MULTI_KEY)
-                        .supplyKey(MULTI_KEY)
-                        .treasury(TOKEN_TREASURY),
-                uploadInitCode(initCreateContract, createContract, multiPurpose, slotUserContract),
-                contractCreate(initCreateContract)
-                        .refusingEthConversion()
-                        .via("constructorWithoutExplicitAssociations")
-                        .hasKnownStatus(SUCCESS),
-                cryptoTransfer(moving(100, FUNGIBLE_TOKEN).between(TOKEN_TREASURY, initCreateContract))
-                        .hasKnownStatus(TOKEN_NOT_ASSOCIATED_TO_ACCOUNT),
-                contractCreate(createContract)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(0)
-                        .hasKnownStatus(SUCCESS),
-                contractCreate(multiPurpose)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(3)
-                        .hasKnownStatus(SUCCESS),
-                contractCreate(slotUserContract)
-                        .refusingEthConversion()
-                        .via("constructorCreate")
-                        .maxAutomaticTokenAssociations(5)
-                        .hasKnownStatus(SUCCESS),
-                contractCall(createContract, "create")
-                        .via("createViaCall")
-                        .gas(400_000L)
-                        .hasKnownStatus(SUCCESS),
-                ethereumCall(createContract, "create")
-                        .type(EthTxData.EthTransactionType.EIP1559)
-                        .signingWith(SECP_256K1_SOURCE_KEY)
-                        .payingWith(RELAYER)
-                        .via("ethereumCreate")
-                        .nonce(0)
-                        .maxFeePerGas(50L)
-                        .maxPriorityGas(2L)
-                        .gasLimit(1_000_000L)
-                        .hasKnownStatus(ResponseCodeEnum.SUCCESS),
-                getContractInfo(initCreateContract)
-                        .has(contractWith().maxAutoAssociations(0))
-                        .logged(),
-                getContractInfo(multiPurpose)
-                        .has(contractWith().maxAutoAssociations(3))
-                        .logged(),
-                getContractInfo(slotUserContract)
-                        .has(contractWith().maxAutoAssociations(5))
-                        .logged(),
-                assertCreationMaxAssociations("constructorWithoutExplicitAssociations", 1, 0),
-                assertCreationMaxAssociations("constructorCreate", 1, 5),
-                assertCreationViaCallMaxAssociations("createViaCall", 0, 0),
-                assertCreationViaCallMaxAssociations("ethereumCreate", 0, 0));
-    }
-
-    @LeakyHapiTest(overrides = {"contracts.evm.version"})
-    final Stream<DynamicTest> childCreationsHaveExpectedKeysWithOmittedAdminKey() {
-        final AtomicLong firstStickId = new AtomicLong();
-        final AtomicLong secondStickId = new AtomicLong();
-        final AtomicLong thirdStickId = new AtomicLong();
-        final var txn = "creation";
-        final var contract = "Fuse";
-
-        return hapiTest(
-                overriding("contracts.evm.version", "v0.46"),
-                uploadInitCode(contract),
-                contractCreate(contract).omitAdminKey().gas(600_000).via(txn),
-                withOpContext((spec, opLog) -> {
-                    final var op = getTxnRecord(txn);
-                    allRunFor(spec, op);
-                    final var record = op.getResponseRecord();
-                    final var creationResult = record.getContractCreateResult();
-                    final var createdIds = creationResult.getCreatedContractIDsList();
-                    assertEquals(4, createdIds.size(), "Expected four creations but got " + createdIds);
-                    firstStickId.set(createdIds.get(1).getContractNum());
-                    secondStickId.set(createdIds.get(2).getContractNum());
-                    thirdStickId.set(createdIds.get(3).getContractNum());
-                }),
-                sourcing(() -> getContractInfo(String.valueOf(firstStickId.get()))
-                        .has(contractWith().immutableContractKey(String.valueOf(firstStickId.get())))
-                        .logged()),
-                sourcing(() -> getContractInfo(String.valueOf(secondStickId.get()))
-                        .has(contractWith().immutableContractKey(String.valueOf(secondStickId.get())))
-                        .logged()),
-                sourcing(() ->
-                        getContractInfo(String.valueOf(thirdStickId.get())).logged()),
-                contractCall(contract, "light").via("lightTxn"),
-                sourcing(() -> getContractInfo(String.valueOf(firstStickId.get()))
-                        .has(contractWith().isDeleted())),
-                sourcing(() -> getContractInfo(String.valueOf(secondStickId.get()))
-                        .has(contractWith().isDeleted())),
-                sourcing(() -> getContractInfo(String.valueOf(thirdStickId.get()))
-                        .has(contractWith().isDeleted())));
-    }
-
     @HapiTest
     final Stream<DynamicTest> createEmptyConstructor() {
-        return hapiTest(uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT), contractCreate(EMPTY_CONSTRUCTOR_CONTRACT));
-    }
-
-    @HapiTest
-    final Stream<DynamicTest> createCallInConstructor() {
-        final var txn = "txn";
         return hapiTest(
-                uploadInitCode("CallInConstructor"),
-                contractCreate("CallInConstructor").via(txn).hasKnownStatus(SUCCESS),
-                getTxnRecord(txn).logged(),
-                withOpContext((spec, opLog) -> {
-                    final var op = getTxnRecord(txn);
-                    allRunFor(spec, op);
-                    final var record = op.getResponseRecord();
-                    final var creationResult = record.getContractCreateResult();
-                    final var createdIds = creationResult.getCreatedContractIDsList();
-                    assertEquals(1, createdIds.size(), "Expected one creations but got " + createdIds);
-                    assertTrue(
-                            createdIds.getFirst().getContractNum() < 10000,
-                            "Expected contract num < 10000 but got " + createdIds);
-                }));
+                uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT).batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR));
     }
 
     @HapiTest
@@ -437,7 +332,8 @@ public class ContractCreateSuite {
 
         return hapiTest(
                 uploadInitCode(contract),
-                contractCreate(contract).balance(balance),
+                atomicBatch(contractCreate(contract).balance(balance).batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 cryptoCreate(aBeneficiary).balance(0L),
                 cryptoCreate(bBeneficiary).balance(0L),
                 withOpContext((spec, opLog) -> {
@@ -464,22 +360,27 @@ public class ContractCreateSuite {
 
         return hapiTest(
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .adminKeyShape(shape)
-                        .sigControl(forKey(EMPTY_CONSTRUCTOR_CONTRACT, invalidSig))
-                        .hasKnownStatus(INVALID_SIGNATURE)
-                        // Refusing ethereum create conversion, because we get INVALID_SIGNATURE upon
-                        // tokenAssociate,
-                        // since we have CONTRACT_ID key
-                        .refusingEthConversion(),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .adminKeyShape(shape)
-                        .sigControl(forKey(EMPTY_CONSTRUCTOR_CONTRACT, validSig))
-                        .hasKnownStatus(SUCCESS)
-                        // Refusing ethereum create conversion, because we get INVALID_SIGNATURE upon
-                        // tokenAssociate,
-                        // since we have CONTRACT_ID key
-                        .refusingEthConversion());
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .adminKeyShape(shape)
+                                .sigControl(forKey(EMPTY_CONSTRUCTOR_CONTRACT, invalidSig))
+                                .hasKnownStatus(INVALID_SIGNATURE)
+                                // Refusing ethereum create conversion, because we get INVALID_SIGNATURE upon
+                                // tokenAssociate,
+                                // since we have CONTRACT_ID key
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .adminKeyShape(shape)
+                                .sigControl(forKey(EMPTY_CONSTRUCTOR_CONTRACT, validSig))
+                                .hasKnownStatus(SUCCESS)
+                                // Refusing ethereum create conversion, because we get INVALID_SIGNATURE upon
+                                // tokenAssociate,
+                                // since we have CONTRACT_ID key
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR));
     }
 
     @HapiTest
@@ -488,10 +389,13 @@ public class ContractCreateSuite {
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
                 // refuse eth conversion because ethereum transaction fails in IngestChecker with precheck status
                 // INSUFFICIENT_GAS
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .gas(0L)
-                        .hasPrecheck(INSUFFICIENT_GAS)
-                        .refusingEthConversion());
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .gas(0L)
+                                .hasPrecheck(INSUFFICIENT_GAS)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasPrecheck(INSUFFICIENT_GAS));
     }
 
     @HapiTest
@@ -501,34 +405,32 @@ public class ContractCreateSuite {
                 cryptoCreate(PAYER), // need to use a payer that is not throttle_exempt
                 // refuse eth conversion because ethereum transaction fails in IngestChecker with precheck status
                 // INSUFFICIENT_GAS
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .gas(-50L)
-                        .payingWith(PAYER)
-                        .hasPrecheck(BUSY)
-                        .refusingEthConversion());
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .gas(-50L)
+                                .payingWith(PAYER)
+                                .hasPrecheck(BUSY)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasPrecheck(INSUFFICIENT_GAS));
     }
 
     @HapiTest
     final Stream<DynamicTest> rejectsInvalidMemo() {
         return hapiTest(
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .entityMemo(TxnUtils.nAscii(101))
-                        .hasPrecheck(MEMO_TOO_LONG),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .entityMemo(ZERO_BYTE_MEMO)
-                        .hasPrecheck(INVALID_ZERO_BYTE_IN_STRING));
-    }
-
-    @HapiTest
-    final Stream<DynamicTest> rejectsInsufficientFee() {
-        return hapiTest(
-                cryptoCreate(PAYER),
-                uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .payingWith(PAYER)
-                        .fee(1L)
-                        .hasPrecheck(INSUFFICIENT_TX_FEE));
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .entityMemo(TxnUtils.nAscii(101))
+                                .hasPrecheck(MEMO_TOO_LONG)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .entityMemo(ZERO_BYTE_MEMO)
+                                .hasPrecheck(INVALID_ZERO_BYTE_IN_STRING)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED));
     }
 
     @HapiTest
@@ -537,16 +439,24 @@ public class ContractCreateSuite {
         return hapiTest(
                 uploadInitCode(contract),
                 // refuse eth conversion because we can't set invalid bytecode to callData in ethereum transaction
-                contractCreate(contract)
-                        .hasKnownStatus(ERROR_DECODING_BYTESTRING)
-                        .refusingEthConversion());
+                atomicBatch(contractCreate(contract)
+                                .hasKnownStatus(ERROR_DECODING_BYTESTRING)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED));
     }
 
     @HapiTest
     final Stream<DynamicTest> revertsNonzeroBalance() {
         return hapiTest(
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT).balance(1L).hasKnownStatus(CONTRACT_REVERT_EXECUTED));
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .balance(1L)
+                                .hasKnownStatus(CONTRACT_REVERT_EXECUTED)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED));
     }
 
     @HapiTest
@@ -567,11 +477,17 @@ public class ContractCreateSuite {
                 uploadInitCode(justSendContract, sendInternalAndDelegateContract),
                 // refuse eth conversion because we can't delegate call contract by contract num
                 // when it has EVM address alias (isNotPriority check fails)
-                contractCreate(justSendContract)
-                        .gas(300_000L)
-                        .exposingContractIdTo(justSendContractId::set)
-                        .refusingEthConversion(),
-                contractCreate(sendInternalAndDelegateContract).gas(300_000L).balance(2 * totalToSend),
+                atomicBatch(contractCreate(justSendContract)
+                                .gas(300_000L)
+                                .exposingContractIdTo(justSendContractId::set)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
+                atomicBatch(contractCreate(sendInternalAndDelegateContract)
+                                .gas(300_000L)
+                                .balance(2 * totalToSend)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 cryptoCreate(beneficiary)
                         .balance(0L)
                         .keyShape(origKey.signedWith(sigs(ON, sendInternalAndDelegateContract)))
@@ -621,13 +537,16 @@ public class ContractCreateSuite {
                         .orUnavailableStatus(),
                 fileCreate("bytecode").contents("").key(KEY_LIST),
                 UtilVerbs.updateLargeFile(ACCOUNT, "bytecode", contents),
-                contractCreate("contract")
-                        .bytecode("bytecode")
-                        .payingWith(ACCOUNT)
-                        .hasKnownStatus(INSUFFICIENT_GAS)
-                        // refuse eth conversion because we can't set invalid bytecode to callData in ethereum
-                        // transaction
-                        .refusingEthConversion());
+                atomicBatch(contractCreate("contract")
+                                .bytecode("bytecode")
+                                .payingWith(ACCOUNT)
+                                .hasKnownStatus(INSUFFICIENT_GAS)
+                                // refuse eth conversion because we can't set invalid bytecode to callData in ethereum
+                                // transaction
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED));
     }
 
     @HapiTest
@@ -638,7 +557,7 @@ public class ContractCreateSuite {
 
         return hapiTest(
                 uploadInitCode(contract),
-                contractCreate(contract),
+                atomicBatch(contractCreate(contract).batchKey(BATCH_OPERATOR)).payingWith(BATCH_OPERATOR),
                 contractCall(contract, "logNow").via(firstBlock),
                 cryptoTransfer(HapiCryptoTransfer.tinyBarsFromTo(GENESIS, FUNDING, 1)),
                 sleepFor(3_000),
@@ -692,21 +611,29 @@ public class ContractCreateSuite {
         final var contract = "CreateTrivial";
         return hapiTest(
                 uploadInitCode(contract),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(-2)
-                        .hasKnownStatus(INVALID_MAX_AUTO_ASSOCIATIONS),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(-200000)
-                        .hasKnownStatus(INVALID_MAX_AUTO_ASSOCIATIONS),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(-1)
-                        .hasKnownStatus(SUCCESS),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .refusingEthConversion()
+                                .maxAutomaticTokenAssociations(-2)
+                                .hasKnownStatus(INVALID_MAX_AUTO_ASSOCIATIONS)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .refusingEthConversion()
+                                .maxAutomaticTokenAssociations(-200000)
+                                .hasKnownStatus(INVALID_MAX_AUTO_ASSOCIATIONS)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .refusingEthConversion()
+                                .maxAutomaticTokenAssociations(-1)
+                                .hasKnownStatus(SUCCESS)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract)
                         .has(contractWith().maxAutoAssociations(-1))
                         .logged());
@@ -717,11 +644,13 @@ public class ContractCreateSuite {
         final var contract = "CreateTrivial";
         return hapiTest(
                 uploadInitCode(contract),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(0)
-                        .hasKnownStatus(SUCCESS),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .refusingEthConversion()
+                                .maxAutomaticTokenAssociations(0)
+                                .hasKnownStatus(SUCCESS)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract)
                         .has(contractWith().maxAutoAssociations(0))
                         .logged());
@@ -732,11 +661,13 @@ public class ContractCreateSuite {
         final var contract = "Donor";
         return hapiTest(
                 uploadInitCode(contract),
-                contractCreate(contract)
-                        .adminKey(THRESHOLD)
-                        .refusingEthConversion()
-                        .balance(ONE_HUNDRED_HBARS)
-                        .hasKnownStatus(SUCCESS),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .refusingEthConversion()
+                                .balance(ONE_HUNDRED_HBARS)
+                                .hasKnownStatus(SUCCESS)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract)
                         .has(contractWith().maxAutoAssociations(0).balance(ONE_HUNDRED_HBARS))
                         .logged());
@@ -749,18 +680,22 @@ public class ContractCreateSuite {
         return hapiTest(
                 uploadInitCode(contract1),
                 uploadInitCode(contract2),
-                contractCreate(contract1)
-                        .via(contract1)
-                        .adminKey(THRESHOLD)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(1)
-                        .hasKnownStatus(SUCCESS),
-                contractCreate(contract2)
-                        .via(contract2)
-                        .adminKey(THRESHOLD)
-                        .refusingEthConversion()
-                        .maxAutomaticTokenAssociations(1000)
-                        .hasKnownStatus(SUCCESS),
+                atomicBatch(
+                                contractCreate(contract1)
+                                        .via(contract1)
+                                        .adminKey(THRESHOLD)
+                                        .refusingEthConversion()
+                                        .maxAutomaticTokenAssociations(1)
+                                        .hasKnownStatus(SUCCESS)
+                                        .batchKey(BATCH_OPERATOR),
+                                contractCreate(contract2)
+                                        .via(contract2)
+                                        .adminKey(THRESHOLD)
+                                        .refusingEthConversion()
+                                        .maxAutomaticTokenAssociations(1000)
+                                        .hasKnownStatus(SUCCESS)
+                                        .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract1)
                         .has(contractWith().maxAutoAssociations(1))
                         .logged(),
@@ -777,7 +712,11 @@ public class ContractCreateSuite {
         return hapiTest(
                 uploadInitCode(contract),
                 // refuse eth conversion because ethereum transaction is missing admin key
-                contractCreate(contract).adminKey(THRESHOLD).refusingEthConversion(),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(THRESHOLD)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract).saveToRegistry(PARENT_INFO),
                 contractCall(contract, "create").gas(1_000_000L).via("createChildTxn"),
                 contractCall(contract, "getIndirect").gas(1_000_000L).via("getChildResultTxn"),
@@ -809,7 +748,7 @@ public class ContractCreateSuite {
         final var contractControlled = "contractControlled";
         return hapiTest(
                 uploadInitCode(contract),
-                contractCreate(contract),
+                atomicBatch(contractCreate(contract).batchKey(BATCH_OPERATOR)).payingWith(BATCH_OPERATOR),
                 cryptoCreate(contractControlled).keyShape(CONTRACT.signedWith(contract)),
                 withOpContext((spec, opLog) -> {
                     final var registry = spec.registry();
@@ -823,20 +762,6 @@ public class ContractCreateSuite {
     }
 
     @HapiTest
-    final Stream<DynamicTest> idVariantsTreatedAsExpected() {
-        final var autoRenewAccount = "autoRenewAccount";
-        final var creationNumber = new AtomicLong();
-        final var contract = "CreateTrivial";
-        return hapiTest(
-                uploadInitCode(contract),
-                cryptoCreate(autoRenewAccount).balance(ONE_HUNDRED_HBARS),
-                submitModified(withSuccessivelyVariedBodyIds(), () -> contractCreate(
-                                "contract" + creationNumber.getAndIncrement())
-                        .bytecode(contract)
-                        .autoRenewAccountId(autoRenewAccount)));
-    }
-
-    @HapiTest
     final Stream<DynamicTest> contractWithAutoRenewNeedSignatures() {
         final var contract = "CreateTrivial";
         final var autoRenewAccount = "autoRenewAccount";
@@ -845,18 +770,23 @@ public class ContractCreateSuite {
                 uploadInitCode(contract),
                 cryptoCreate(autoRenewAccount).balance(ONE_HUNDRED_HBARS),
                 // refuse eth conversion because ethereum transaction is missing autoRenewAccountId field to map
-                contractCreate(contract)
-                        .adminKey(ADMIN_KEY)
-                        .autoRenewAccountId(autoRenewAccount)
-                        .signedBy(DEFAULT_PAYER, ADMIN_KEY)
-                        .hasKnownStatus(INVALID_SIGNATURE)
-                        .refusingEthConversion(),
-                contractCreate(contract)
-                        .adminKey(ADMIN_KEY)
-                        .autoRenewAccountId(autoRenewAccount)
-                        .signedBy(DEFAULT_PAYER, ADMIN_KEY, autoRenewAccount)
-                        .refusingEthConversion()
-                        .logged(),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(ADMIN_KEY)
+                                .autoRenewAccountId(autoRenewAccount)
+                                .signedBy(DEFAULT_PAYER, ADMIN_KEY)
+                                .hasKnownStatus(INVALID_SIGNATURE)
+                                .refusingEthConversion()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
+                atomicBatch(contractCreate(contract)
+                                .adminKey(ADMIN_KEY)
+                                .autoRenewAccountId(autoRenewAccount)
+                                .signedBy(DEFAULT_PAYER, ADMIN_KEY, autoRenewAccount)
+                                .refusingEthConversion()
+                                .logged()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getContractInfo(contract).has(ContractInfoAsserts.contractWith().maxAutoAssociations(0)));
     }
 
@@ -866,10 +796,13 @@ public class ContractCreateSuite {
         AtomicReference<Timestamp> ts = new AtomicReference<>();
         return hapiTest(
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
-                        .balance(1L)
-                        .via(txn)
-                        .hasKnownStatus(CONTRACT_REVERT_EXECUTED),
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .balance(1L)
+                                .via(txn)
+                                .hasKnownStatus(CONTRACT_REVERT_EXECUTED)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR)
+                        .hasKnownStatus(INNER_TRANSACTION_FAILED),
                 // check if CONTRACT_REVERT_EXECUTED record DON`T contains expected contractIds
                 withOpContext((spec, opLog) -> {
                     final var record = getRecord(spec, txn, CONTRACT_REVERT_EXECUTED);
@@ -884,7 +817,11 @@ public class ContractCreateSuite {
         AtomicReference<Timestamp> ts = new AtomicReference<>();
         return hapiTest(
                 uploadInitCode(EMPTY_CONSTRUCTOR_CONTRACT),
-                contractCreate(EMPTY_CONSTRUCTOR_CONTRACT).via(txn).hasKnownStatus(SUCCESS),
+                atomicBatch(contractCreate(EMPTY_CONSTRUCTOR_CONTRACT)
+                                .via(txn)
+                                .hasKnownStatus(SUCCESS)
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 // check if record contains expected contractIds
                 withOpContext((spec, opLog) -> {
                     final var record = getRecord(spec, txn, SUCCESS);
@@ -898,7 +835,12 @@ public class ContractCreateSuite {
         final String txn = "contractCreateGas";
         return hapiTest(
                 uploadInitCode("Storage"),
-                contractCreate("Storage").gas(124_000L).via(txn).logged(),
+                atomicBatch(contractCreate("Storage")
+                                .gas(124_000L)
+                                .via(txn)
+                                .logged()
+                                .batchKey(BATCH_OPERATOR))
+                        .payingWith(BATCH_OPERATOR),
                 getTxnRecord(txn).andAllChildRecords().logged().saveTxnRecordToRegistry(txn),
                 withOpContext((spec, ignore) -> {
                     final var gasUsed = spec.registry()
