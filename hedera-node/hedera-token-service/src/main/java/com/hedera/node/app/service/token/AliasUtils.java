@@ -22,6 +22,7 @@ import java.util.HexFormat;
 public final class AliasUtils {
     /** The first 12 bytes of an "entity num alias". See {@link #isEntityNumAlias(Bytes)}. */
     private static final byte[] ENTITY_NUM_ALIAS_PREFIX = new byte[12];
+    private static final byte[] ENTITY_NUM_ALIAS_0 = new byte[20];
     /** All EVM addresses are 20 bytes long, and key-encoded keys are not. */
     private static final int EVM_ADDRESS_SIZE = 20;
     /** All valid ECDSA protobuf encoded keys have this prefix. */
@@ -90,7 +91,7 @@ public final class AliasUtils {
      * @return True if the alias is an entity num alias
      */
     public static boolean isEntityNumAlias(final Bytes alias) {
-        return isOfEvmAddressSize(alias) && alias.matchesPrefix(ENTITY_NUM_ALIAS_PREFIX);
+        return isOfEvmAddressSize(alias) && alias.matchesPrefix(ENTITY_NUM_ALIAS_PREFIX) && !alias.matchesPrefix(ENTITY_NUM_ALIAS_0);
     }
 
     /**
