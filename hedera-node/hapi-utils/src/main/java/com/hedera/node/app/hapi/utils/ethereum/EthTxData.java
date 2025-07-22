@@ -411,7 +411,7 @@ public record EthTxData(
                 value,
                 callData,
                 accessList,
-                accessListAsRlp,
+                null,
                 recId,
                 v,
                 r,
@@ -457,8 +457,8 @@ public record EthTxData(
                 null, // maxPriorityGas
                 null, // maxGas
                 asLong(rlpList.get(2)), // gasLimit
-                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(3).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(3).data(), // to
                 rlpList.get(3).data(), // to
+                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(3).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(3).data(), // to
                 rlpList.get(4).asBigInt(), // value
                 rlpList.get(5).data(), // callData
                 null, // accessList
@@ -494,8 +494,8 @@ public record EthTxData(
                 rlpList.get(2).data(), // maxPriorityGas
                 rlpList.get(3).data(), // maxGas
                 asLong(rlpList.get(4)), // gasLimit
-                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(5).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(5).data(), // to
                 rlpList.get(5).data(), // to
+                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(5).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(5).data(), // to
                 rlpList.get(6).asBigInt(), // value
                 rlpList.get(7).data(), // callData
                 rlpList.get(8).data(), // accessList
@@ -533,8 +533,8 @@ public record EthTxData(
                 null, // maxPriorityGas
                 null, // maxGas
                 asLong(rlpList.get(3)), // gasLimit
-                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(4).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(4).data(), // to
                 rlpList.get(4).data(), // to
+                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(4).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(4).data(), // to
                 rlpList.get(5).asBigInt(), // value
                 rlpList.get(6).data(), // callData
                 rlpList.get(7).data(), // accessList
