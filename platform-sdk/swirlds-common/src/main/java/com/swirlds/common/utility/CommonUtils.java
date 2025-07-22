@@ -252,4 +252,44 @@ public class CommonUtils {
     public static String byteCountToDisplaySize(final long bytes) {
         return UNIT_BYTES.buildFormatter(bytes).setDecimalPlaces(1).render();
     }
+
+    /**
+     * Converts a hexadecimal string back to the original array of bytes.
+     *
+     * @param string the hexadecimal string to be converted
+     * @return an array of bytes
+     */
+    @SuppressWarnings("java:S127")
+    public static byte[] unhex(final String string) {
+        if (string == null) {
+            return null;
+        }
+
+        final char[] data = string.toCharArray();
+        final int len = data.length;
+
+        if ((len & 0x01) != 0) {
+            throw new IllegalArgumentException("Odd number of characters.");
+        }
+
+        final byte[] out = new byte[len >> 1];
+
+        for (int i = 0, j = 0; j < len; i++) {
+            int f = toDigit(data[j], j) << 4;
+            j++;
+            f = f | toDigit(data[j], j);
+            j++;
+            out[i] = (byte) (f & 0xFF);
+        }
+
+        return out;
+    }
+
+    private static int toDigit(final char ch, final int index) throws IllegalArgumentException {
+        final int digit = Character.digit(ch, 16);
+        if (digit == -1) {
+            throw new IllegalArgumentException("Illegal hexadecimal character " + ch + " at index " + index);
+        }
+        return digit;
+    }
 }
