@@ -8,6 +8,7 @@ import com.esaulpaugh.headlong.rlp.RLPList;
 import com.esaulpaugh.headlong.util.Integers;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
+import org.hiero.base.utility.CommonUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public record EthTxData(
         byte[] maxGas,
         long gasLimit,
         byte[] to,
+        byte[] addressZero,
         BigInteger value, // weibar, always positive - note that high-bit might be ON in RLP encoding: still positive
         byte[] callData,
         byte[] accessList,
@@ -53,6 +55,9 @@ public record EthTxData(
     // EIP155 note support for v = 27|28 cases in unprotected transaction cases
     static final BigInteger LEGACY_V_BYTE_SIGNATURE_0 = BigInteger.valueOf(27);
     static final BigInteger LEGACY_V_BYTE_SIGNATURE_1 = BigInteger.valueOf(28);
+
+    static final byte[] ENTITY_NUM_ALIAS_0 = new byte[20];
+    static final String ADDRESS_0_REPLACEMENT = "d1b447296a57ec2ea4add0554f392eaf873f6e8d";
 
     // The specific transaction bytes that are used to deploy the Deterministic Deployer contract
     // see -  https://github.com/Arachnid/deterministic-deployment-proxy?tab=readme-ov-file#deployment-transaction
@@ -91,6 +96,7 @@ public record EthTxData(
                 maxGas,
                 gasLimit,
                 to,
+                addressZero,
                 value,
                 newCallData,
                 accessList,
@@ -113,6 +119,7 @@ public record EthTxData(
                 maxGas,
                 gasLimit,
                 to,
+                addressZero,
                 replacementValue,
                 callData,
                 accessList,
@@ -332,6 +339,7 @@ public record EthTxData(
                 maxGas,
                 gasLimit,
                 newTo,
+                addressZero,
                 value,
                 callData,
                 accessList,
@@ -354,6 +362,7 @@ public record EthTxData(
                 maxGas,
                 gasLimit,
                 to,
+                addressZero,
                 value,
                 callData,
                 accessList,
@@ -376,6 +385,7 @@ public record EthTxData(
                 maxGas,
                 gasLimit,
                 to,
+                addressZero,
                 value,
                 callData,
                 accessList,
@@ -398,6 +408,7 @@ public record EthTxData(
                 maxGas,
                 gasLimit,
                 to,
+                addressZero,
                 value,
                 callData,
                 accessList,
@@ -447,6 +458,7 @@ public record EthTxData(
                 null, // maxPriorityGas
                 null, // maxGas
                 asLong(rlpList.get(2)), // gasLimit
+                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(3).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(3).data(),
                 rlpList.get(3).data(), // to
                 rlpList.get(4).asBigInt(), // value
                 rlpList.get(5).data(), // callData
@@ -483,7 +495,8 @@ public record EthTxData(
                 rlpList.get(2).data(), // maxPriorityGas
                 rlpList.get(3).data(), // maxGas
                 asLong(rlpList.get(4)), // gasLimit
-                rlpList.get(5).data(), // to
+                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(5).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(5).data(), // to
+                rlpList.get(5).data(),
                 rlpList.get(6).asBigInt(), // value
                 rlpList.get(7).data(), // callData
                 rlpList.get(8).data(), // accessList
@@ -521,7 +534,8 @@ public record EthTxData(
                 null, // maxPriorityGas
                 null, // maxGas
                 asLong(rlpList.get(3)), // gasLimit
-                rlpList.get(4).data(), // to
+                Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(4).data()) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(4).data(), // to
+                rlpList.get(4).data(),
                 rlpList.get(5).asBigInt(), // value
                 rlpList.get(6).data(), // callData
                 rlpList.get(7).data(), // accessList

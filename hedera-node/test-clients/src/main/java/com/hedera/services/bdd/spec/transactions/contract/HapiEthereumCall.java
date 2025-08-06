@@ -335,6 +335,7 @@ public class HapiEthereumCall extends HapiBaseCall<HapiEthereumCall> {
                 maxFeePerGasBytes,
                 gas.orElse(100_000L),
                 to,
+                to,
                 valueSent.orElse(BigInteger.ZERO),
                 callData,
                 new byte[] {},

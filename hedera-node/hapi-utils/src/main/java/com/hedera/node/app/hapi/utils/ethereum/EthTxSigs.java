@@ -16,12 +16,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import com.swirlds.common.utility.CommonUtils;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.hyperledger.besu.nativelib.secp256k1.LibSecp256k1;
 
 public record EthTxSigs(byte[] publicKey, byte[] address) {
+    private static final byte[] ENTITY_NUM_ALIAS_0 = new byte[20];
     private static final BigInteger N = SECNamedCurves.getByName("secp256k1").getN();
 
     public static EthTxSigs extractSignatures(EthTxData ethTx) {
@@ -48,7 +50,7 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
                         Integers.toBytes(ethTx.nonce()),
                         ethTx.gasPrice(),
                         Integers.toBytes(ethTx.gasLimit()),
-                        ethTx.to(),
+                        Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
                         Integers.toBytesUnsigned(ethTx.value()),
                         ethTx.callData(),
                         ethTx.chainId(),
@@ -73,7 +75,7 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
             ethTx.maxPriorityGas(),
             ethTx.maxGas(),
             Integers.toBytes(ethTx.gasLimit()),
-            ethTx.to(),
+            Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
             Integers.toBytesUnsigned(ethTx.value()),
             ethTx.callData(),
             ethTx.accessListAsRlp() != null ? ethTx.accessListAsRlp() : new Object[0]
@@ -89,7 +91,7 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
             Integers.toBytes(ethTx.nonce()),
             ethTx.gasPrice(),
             Integers.toBytes(ethTx.gasLimit()),
-            ethTx.to(),
+            Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
             Integers.toBytesUnsigned(ethTx.value()),
             ethTx.callData(),
             ethTx.accessListAsRlp() != null ? ethTx.accessListAsRlp() : new Object[0]
