@@ -67,7 +67,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
                         Integers.toBytes(ethTx.nonce()),
                         ethTx.gasPrice(),
                         Integers.toBytes(ethTx.gasLimit()),
-                        ethTx.to(),
+                        (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
+                            || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
                         Integers.toBytesUnsigned(ethTx.value()),
                         ethTx.callData());
     }

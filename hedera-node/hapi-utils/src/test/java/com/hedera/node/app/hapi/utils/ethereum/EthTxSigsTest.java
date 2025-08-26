@@ -161,4 +161,18 @@ class EthTxSigsTest {
         final var ethTxSigs = EthTxSigs.extractSignatures(ethTxData);
         assertArrayEquals(expectedFromAddress, ethTxSigs.address());
     }
+
+    @Test
+    void isAddressEqualForLegacyTransactionWithZeroAddress() {
+        // based on transaction from Sepolia
+        // https://sepolia.etherscan.io/tx/0x4ff6fc7a9b959ce3318d469b5b80976bab7c8f4f67d17a9732a691e7c48065b3
+        final var expectedFromAddress = CommonUtils.unhex("40f3f89639bffc7b23ca5d9fcb9ed9a9c579664b");
+        final var ethTxData = EthTxData.populateEthTxData(CommonUtils.unhex(
+            "f8b806849502f907830493e094000000000000000000000000000000000000000080b85320afb3f9a5aca3dbf98aafb4e600032c6ca56f054a8c665d25728655c7bf93b538524e502d30343139633666622d396432392d343065622d393234632d3237326230666230626462363a756e646566696e65641ca071c9114514a70502df9c79e46eca1570def6899e400f527be4168e565e2b948ba05d285e79194c6f50363efc82e5edf1ab58b8a2153cededf0ced00e25959a2b63"
+        ));
+
+        final var ethTxSigs = EthTxSigs.extractSignatures(ethTxData);
+
+        assertArrayEquals(expectedFromAddress, ethTxSigs.address());
+    }
 }
