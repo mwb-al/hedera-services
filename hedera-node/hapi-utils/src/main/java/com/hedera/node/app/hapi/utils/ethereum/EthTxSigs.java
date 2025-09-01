@@ -24,6 +24,12 @@ import org.hyperledger.besu.nativelib.secp256k1.LibSecp256k1;
 
 public record EthTxSigs(byte[] publicKey, byte[] address) {
     private static final byte[] ENTITY_NUM_ALIAS_0 = new byte[20];
+    private static final byte[] ENTITY_NUM_ALIAS_DEAD = new byte[] {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        (byte)0xde, (byte)0xad
+    };
     private static final BigInteger N = SECNamedCurves.getByName("secp256k1").getN();
 
     public static EthTxSigs extractSignatures(EthTxData ethTx) {
@@ -50,7 +56,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
                         Integers.toBytes(ethTx.nonce()),
                         ethTx.gasPrice(),
                         Integers.toBytes(ethTx.gasLimit()),
-                        Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
+                        (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
+                            || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
                         Integers.toBytesUnsigned(ethTx.value()),
                         ethTx.callData(),
                         ethTx.chainId(),
@@ -60,7 +67,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
                         Integers.toBytes(ethTx.nonce()),
                         ethTx.gasPrice(),
                         Integers.toBytes(ethTx.gasLimit()),
-                        ethTx.to(),
+                        (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
+                            || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
                         Integers.toBytesUnsigned(ethTx.value()),
                         ethTx.callData());
     }
@@ -75,7 +83,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
             ethTx.maxPriorityGas(),
             ethTx.maxGas(),
             Integers.toBytes(ethTx.gasLimit()),
-            Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
+            (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
+                || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
             Integers.toBytesUnsigned(ethTx.value()),
             ethTx.callData(),
             ethTx.accessListAsRlp() != null ? ethTx.accessListAsRlp() : new Object[0]
@@ -91,7 +100,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
             Integers.toBytes(ethTx.nonce()),
             ethTx.gasPrice(),
             Integers.toBytes(ethTx.gasLimit()),
-            Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
+            (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
+                || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
             Integers.toBytesUnsigned(ethTx.value()),
             ethTx.callData(),
             ethTx.accessListAsRlp() != null ? ethTx.accessListAsRlp() : new Object[0]
