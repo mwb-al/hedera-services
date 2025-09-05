@@ -21,6 +21,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.hyperledger.besu.nativelib.secp256k1.LibSecp256k1;
+import java.util.Set;
 
 public record EthTxSigs(byte[] publicKey, byte[] address) {
     private static final byte[] ENTITY_NUM_ALIAS_0 = new byte[20];
@@ -30,7 +31,18 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         (byte)0xde, (byte)0xad
     };
+    private static final Set<String> SPECIAL_ADDRESSES_HEX = Set.of(
+            Hex.encodeHexString(ENTITY_NUM_ALIAS_0),
+            Hex.encodeHexString(ENTITY_NUM_ALIAS_DEAD)
+    );
     private static final BigInteger N = SECNamedCurves.getByName("secp256k1").getN();
+
+    private static boolean isSpecialAddress(final byte[] addr) {
+        if (addr == null || addr.length == 0) {
+            return false;
+        }
+        return SPECIAL_ADDRESSES_HEX.contains(Hex.encodeHexString(addr));
+    }
 
     public static EthTxSigs extractSignatures(EthTxData ethTx) {
         final var message = calculateSignableMessage(ethTx);
@@ -56,9 +68,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
                         Integers.toBytes(ethTx.nonce()),
                         ethTx.gasPrice(),
                         Integers.toBytes(ethTx.gasLimit()),
-                        (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
-                            || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
-                        Integers.toBytesUnsigned(ethTx.value()),
+                isSpecialAddress(ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
+                Integers.toBytesUnsigned(ethTx.value()),
                         ethTx.callData(),
                         ethTx.chainId(),
                         Integers.toBytes(0),
@@ -67,9 +78,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
                         Integers.toBytes(ethTx.nonce()),
                         ethTx.gasPrice(),
                         Integers.toBytes(ethTx.gasLimit()),
-                        (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
-                            || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
-                        Integers.toBytesUnsigned(ethTx.value()),
+                isSpecialAddress(ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
+                Integers.toBytesUnsigned(ethTx.value()),
                         ethTx.callData());
     }
 
@@ -83,9 +93,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
             ethTx.maxPriorityGas(),
             ethTx.maxGas(),
             Integers.toBytes(ethTx.gasLimit()),
-            (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
-                || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
-            Integers.toBytesUnsigned(ethTx.value()),
+                isSpecialAddress(ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
+                Integers.toBytesUnsigned(ethTx.value()),
             ethTx.callData(),
             ethTx.accessListAsRlp() != null ? ethTx.accessListAsRlp() : new Object[0]
         });
@@ -100,9 +109,8 @@ public record EthTxSigs(byte[] publicKey, byte[] address) {
             Integers.toBytes(ethTx.nonce()),
             ethTx.gasPrice(),
             Integers.toBytes(ethTx.gasLimit()),
-            (Arrays.equals(ENTITY_NUM_ALIAS_0, ethTx.addressZero())
-                || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, ethTx.addressZero())) ? ethTx.addressZero() : ethTx.to(),
-            Integers.toBytesUnsigned(ethTx.value()),
+                isSpecialAddress(ethTx.addressZero()) ? ethTx.addressZero() : ethTx.to(),
+                Integers.toBytesUnsigned(ethTx.value()),
             ethTx.callData(),
             ethTx.accessListAsRlp() != null ? ethTx.accessListAsRlp() : new Object[0]
         });

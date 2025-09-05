@@ -19,6 +19,7 @@ import java.util.Objects;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.util.BigIntegers;
+import java.util.Set;
 
 public record EthTxData(
         byte[] rawTx,
@@ -70,6 +71,18 @@ public record EthTxData(
     public static final byte[] DETERMINISTIC_DEPLOYER_TRANSACTION = HexFormat.of()
             .parseHex(
                     "f8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222");
+
+    private static final Set<String> SPECIAL_ADDRESSES_HEX = Set.of(
+            Hex.encodeHexString(ENTITY_NUM_ALIAS_0),
+            Hex.encodeHexString(ENTITY_NUM_ALIAS_DEAD)
+    );
+
+    private static boolean isSpecialAddress(final byte[] addr) {
+        if (addr == null || addr.length == 0) {
+            return false;
+        }
+        return SPECIAL_ADDRESSES_HEX.contains(Hex.encodeHexString(addr));
+    }
 
     public static EthTxData populateEthTxData(final byte[] data) {
         try {
@@ -464,9 +477,9 @@ public record EthTxData(
                 null, // maxPriorityGas
                 null, // maxGas
                 asLong(rlpList.get(2)), // gasLimit
-                (Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(3).data())
-                    || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, rlpList.get(3).data())) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(3).data(),
-                rlpList.get(3).data(), // to
+                isSpecialAddress(rlpList.get(3).data())
+                        ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT)
+                        : rlpList.get(3).data(),
                 rlpList.get(4).asBigInt(), // value
                 rlpList.get(5).data(), // callData
                 null, // accessList
@@ -502,8 +515,9 @@ public record EthTxData(
                 rlpList.get(2).data(), // maxPriorityGas
                 rlpList.get(3).data(), // maxGas
                 asLong(rlpList.get(4)), // gasLimit
-                (Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(5).data())
-                    || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, rlpList.get(5).data())) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(5).data(), // to
+                isSpecialAddress(rlpList.get(5).data())
+                        ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT)
+                        : rlpList.get(5).data(), // to
                 rlpList.get(5).data(),
                 rlpList.get(6).asBigInt(), // value
                 rlpList.get(7).data(), // callData
@@ -542,8 +556,9 @@ public record EthTxData(
                 null, // maxPriorityGas
                 null, // maxGas
                 asLong(rlpList.get(3)), // gasLimit
-                (Arrays.equals(ENTITY_NUM_ALIAS_0, rlpList.get(4).data())
-                    || Arrays.equals(ENTITY_NUM_ALIAS_DEAD, rlpList.get(4).data())) ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT) : rlpList.get(4).data(), // to
+                isSpecialAddress(rlpList.get(4).data())
+                        ? CommonUtils.unhex(ADDRESS_0_REPLACEMENT)
+                        : rlpList.get(4).data(), // to
                 rlpList.get(4).data(),
                 rlpList.get(5).asBigInt(), // value
                 rlpList.get(6).data(), // callData
